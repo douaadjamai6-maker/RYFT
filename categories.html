@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ryft — Categories</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    body {
+      background-color: #f4f6f9;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .bento-container {
+      max-width: 960px;
+      margin: 40px auto 60px;
+      padding: 0 20px;
+    }
+
+    .bento-grid {
+      display: grid;
+      grid-template-columns: 1.8fr 1fr 1fr;
+      grid-template-rows: 170px 170px 100px;
+      gap: 20px;
+    }
+
+    .bento-card {
+      border-radius: 20px;
+      padding: 24px;
+      text-decoration: none;
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      position: relative;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      overflow: hidden;
+    }
+
+    .bento-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-info h2 {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin-bottom: 2px;
+      color: #ffffff;
+    }
+
+    .card-info p {
+      font-size: 11px;
+      opacity: 0.85;
+      font-weight: 500;
+      margin: 0;
+      color: #ffffff;
+    }
+
+    .badge-pill {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: rgba(255, 255, 255, 0.95);
+      color: #0d2538;
+      padding: 5px 14px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    /* Gradients matching your mockup */
+    .card-clothes {
+      grid-column: 1 / 2;
+      grid-row: 1 / 3;
+      background: linear-gradient(180deg, #1b4955 0%, #3a474d 100%);
+    }
+
+    .card-clothes .card-info h2 {
+      font-size: 24px;
+    }
+
+    .card-electronics {
+      background: linear-gradient(180deg, #00b4d8 0%, #4a6fa5 100%);
+    }
+
+    .card-home {
+      background: linear-gradient(180deg, #e05627 0%, #6e4a42 100%);
+    }
+
+    .card-accessories {
+      background: linear-gradient(180deg, #d4c5b9 0%, #686461 100%);
+    }
+
+    .card-beauty {
+      background: linear-gradient(180deg, #b06a88 0%, #54464f 100%);
+    }
+
+    .card-shoes {
+      background: linear-gradient(180deg, #d39e57 0%, #6e5e54 100%);
+    }
+
+    .card-kids {
+      grid-column: 2 / 4;
+      background: linear-gradient(180deg, #748c71 0%, #4e554d 100%);
+    }
+
+    .see-all-wrapper {
+      text-align: center;
+      margin-top: 32px;
+    }
+
+    .see-all-link {
+      text-decoration: none;
+      color: #475569;
+      font-weight: 600;
+      font-size: 14px;
+      transition: color 0.2s ease;
+    }
+
+    .see-all-link:hover {
+      color: #0f172a;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Untouched Original Navbar -->
+  <nav class="navbar">
+    <div class="logo">
+      <a href="index.html"><img src="Logo.jpg" alt="Ryft logo" class="logo-img"></a>
+    </div>
+    
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="categories.html" class="active">Categories</a></li>
+      <li><a href="add-listing.html">Sell</a></li>
+    </ul>
+
+    <div class="nav-icons">
+      <a href="messages.html" class="icon-circle"><i class="fa-solid fa-comment"></i></a>
+      <a href="saved-items.html" class="icon-circle"><i class="fa-solid fa-heart"></i></a>
+
+      <div class="profile-dropdown-wrapper">
+        <a href="buyer-profile.html" class="icon-circle"><i class="fa-solid fa-user"></i></a>
+        
+        <div class="profile-dropdown-menu">
+          <a href="buyer-profile.html" class="dropdown-item">
+            <i class="fa-regular fa-user"></i>
+            <span>Your Profile</span>
+          </a>
+          <a href="seller-dashboard.html" class="dropdown-item">
+            <i class="fa-solid fa-store"></i>
+            <span>Switch to Seller Profile</span>
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="signup-buyer.html" class="dropdown-item logout-item">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            <span>Log out</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="bento-container">
+    <div class="bento-grid">
+      
+      <a href="clothes.html" class="bento-card card-clothes">
+        <span class="badge-pill">Most Searched</span>
+        <div class="card-info">
+          <h2>CLOTHES</h2>
+          <p>223 SHOPS</p>
+        </div>
+      </a>
+
+      <a href="electronics.html" class="bento-card card-electronics">
+        <div class="card-info">
+          <h2>ELECTRONICS</h2>
+          <p>120 SHOPS</p>
+        </div>
+      </a>
+
+      <a href="home-living.html" class="bento-card card-home">
+        <div class="card-info">
+          <h2>HOME & LIVING</h2>
+          <p>75 SHOPS</p>
+        </div>
+      </a>
+
+      <a href="accessories.html" class="bento-card card-accessories">
+        <div class="card-info">
+          <h2>ACCESSORIES</h2>
+          <p>50 SHOPS</p>
+        </div>
+      </a>
+
+      <a href="beauty.html" class="bento-card card-beauty">
+        <div class="card-info">
+          <h2>BEAUTY</h2>
+          <p>129 SHOPS</p>
+        </div>
+      </a>
+
+      <a href="shoes.html" class="bento-card card-shoes">
+        <div class="card-info">
+          <h2>SHOES</h2>
+          <p>67 SHOPS</p>
+        </div>
+      </a>
+
+      <a href="kids.html" class="bento-card card-kids">
+        <div class="card-info">
+          <h2>KIDS</h2>
+          <p>30 SHOPS</p>
+        </div>
+      </a>
+
+    </div>
+
+    <div class="see-all-wrapper">
+      <a href="#" class="see-all-link">See all categories →</a>
+    </div>
+  </main>
+
+</body>
+</html>

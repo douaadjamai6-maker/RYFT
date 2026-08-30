@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ryft — Electronics</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body style="background-color: #f4f6f9;">
+  <nav class="navbar">
+    <div class="logo"><a href="index.html"><img src="Logo.jpg" alt="Ryft logo" class="logo-img"></a></div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="categories.html" class="active">Categories</a></li>
+      <li><a href="add-listing.html">Sell</a></li>
+    </ul>
+    <div class="nav-icons">
+      <a href="messages.html" class="icon-circle"><i class="fa-solid fa-comment"></i></a>
+      <a href="saved-items.html" class="icon-circle"><i class="fa-solid fa-heart"></i></a>
+      <a href="buyer-profile.html" class="icon-circle"><i class="fa-solid fa-user"></i></a>
+    </div>
+  </nav>
+
+  <main style="max-width: 1200px; margin: 30px auto; padding: 0 20px;">
+    <h1 style="font-size: 28px; font-weight: 700; color: #1e293b; margin-bottom: 20px;">Electronics</h1>
+    <div style="display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 14px 20px; border-radius: 12px; margin-bottom: 24px; border: 1px solid #e2e8f0;">
+      <a href="categories.html" style="text-decoration: none; color: #2563eb; font-weight: 600; font-size: 14px;">← Back to Categories</a>
+      <input type="text" id="cat-search-input" placeholder="Search electronics..." style="padding: 8px 14px; border: 1px solid #cbd5e1; border-radius: 8px; width: 240px;">
+    </div>
+    <div id="category-grid" class="products-grid"></div>
+  </main>
+
+  <script src="category-template.js"></script>
+  <script>renderCategoryPage("Electronics");</script>
+</body>
+</html>

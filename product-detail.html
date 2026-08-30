@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="page-title">Ryft — Product Detail</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <nav class="navbar">
+    <div class="logo">
+      <img src="Logo.jpg" alt="Ryft logo" class="logo-img">
+    </div>
+
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="categories.html">Categories</a></li>
+      <li><a href="add-listing.html">Sell</a></li>
+    </ul>
+
+    <div class="nav-icons">
+      <a href="messages.html" class="icon-circle"><i class="fa-solid fa-comment"></i></a>
+      <a href="saved-items.html" class="icon-circle"><i class="fa-solid fa-heart"></i></a>
+
+      <div class="profile-dropdown-wrapper">
+        <a href="buyer-profile.html" class="icon-circle"><i class="fa-solid fa-user"></i></a>
+        
+        <div class="profile-dropdown-menu">
+          <a href="buyer-profile.html" class="dropdown-item">
+            <i class="fa-regular fa-user"></i>
+            <span>Your Profile</span>
+          </a>
+          <a href="seller-dashboard.html" class="dropdown-item">
+            <i class="fa-solid fa-store"></i>
+            <span>Switch to Seller Profile</span>
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="signup-buyer.html" class="dropdown-item logout-item">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            <span>Log out</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Product Detail Section -->
+  <section class="product-detail">
+
+    <div class="pd-grid">
+
+      <div class="gallery">
+        <div class="main-image">
+          <img id="detail-image" src="headphones.jpg" alt="Product Image">
+        </div>
+
+        <div class="thumbnail-row">
+          <div class="thumbnail active">
+            <img id="thumb-main" src="headphones.jpg" alt="thumbnail main">
+          </div>
+          <div class="thumbnail video-thumb">
+            <img src="headphones-video-cover.jpg" alt="product video">
+            <div class="play-overlay"><i class="fa-solid fa-play"></i></div>
+          </div>
+          <div class="thumbnail">
+            <img src="headphones-thumb3.jpg" alt="thumbnail 3">
+          </div>
+        </div>
+      </div>
+
+      <div class="pd-info">
+
+        <h1 id="detail-title" class="pd-title">Wireless Headphones</h1>
+        <p id="detail-price" class="pd-price">3,500 DA</p>
+
+        <hr class="pd-divider">
+
+        <h3 class="pd-desc-heading">Description</h3>
+        <p id="detail-description" class="pd-description">
+          Authentic product listed on social media, available for direct order in Algeria. High-quality condition, fast delivery available across all wilayas. Contact seller for details and sizing.
+        </p>
+
+        <hr class="pd-divider">
+
+        <!-- Clickable Public Shop Link -->
+        <a id="seller-profile-link" href="shop-profile.html" class="seller-row-link" style="text-decoration: none; color: inherit;">
+          <div class="seller-row">
+            <img id="detail-seller-logo" src="electrologo.jpg" alt="Seller logo" class="seller-logo">
+            <span id="detail-seller-name" class="seller-name">Electro dz</span>
+            <i class="fa-solid fa-chevron-right seller-arrow"></i>
+          </div>
+        </a>
+
+        <div class="pd-actions">
+          <a id="btn-message-seller" href="conversation.html" class="btn-message">
+            <i class="fa-solid fa-comment"></i> Message seller
+          </a>
+          
+          <button type="button" id="fav-btn" class="fav-btn" aria-label="Save Item">
+            <i class="fa-regular fa-heart"></i>
+          </button>          
+        </div>
+
+        <!-- Clean Review Section -->
+        <div class="review-section">
+          <form id="review-form" class="review-form">
+            <input type="text" id="review-text" class="review-input" placeholder="Leave Review..." required>
+            <button type="submit" class="btn-submit-review">Post</button>
+          </form>
+
+          <div id="reviews-list" class="reviews-list"></div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="more-section">
+      <hr class="pd-divider">
+      <h3 id="more-heading" class="more-heading">More from seller</h3>
+
+      <div class="more-grid">
+        <div class="more-card"><img src="more1.jpg" alt="more product 1"></div>
+        <div class="more-card"><img src="more2.jpg" alt="more product 2"></div>
+        <div class="more-card"><img src="more3.jpg" alt="more product 3"></div>
+        <div class="more-card"><img src="more4.jpg" alt="more product 4"></div>
+      </div>
+    </div>
+
+  </section>
+
+  <script src="product-detail.js"></script>
+</body>
+</html>

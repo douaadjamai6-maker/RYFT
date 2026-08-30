@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ryft — Saved Items</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <nav class="navbar">
+    <div class="logo">
+      <img src="Logo.jpg" alt="Ryft logo" class="logo-img">
+    </div>
+
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="categories.html">Categories</a></li>
+      <li><a href="add-listing.html">Sell</a></li>
+    </ul>
+
+    <div class="nav-icons">
+      <!-- Message Icon -->
+      <a href="messages.html" class="icon-circle"><i class="fa-solid fa-comment"></i></a>
+
+      <!-- Active Heart / Saved Items Icon -->
+      <a href="saved-items.html" class="icon-circle active-nav"><i class="fa-solid fa-heart"></i></a>
+
+      <!-- Profile Dropdown Wrapper -->
+      <div class="profile-dropdown-wrapper">
+        <a href="buyer-profile.html" class="icon-circle"><i class="fa-solid fa-user"></i></a>
+        
+        <div class="profile-dropdown-menu">
+          <a href="buyer-profile.html" class="dropdown-item">
+            <i class="fa-regular fa-user"></i>
+            <span>Your Profile</span>
+          </a>
+          <a href="seller-dashboard.html" class="dropdown-item">
+            <i class="fa-solid fa-store"></i>
+            <span>Switch to Seller Profile</span>
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="signup-buyer.html" class="dropdown-item logout-item">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            <span>Log out</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Saved Items Section -->
+  <main class="saved-container">
+    <header class="saved-header">
+      <p class="saved-eyebrow">YOUR PICKS</p>
+      <h1 class="saved-title">Saved for later.</h1>
+      <p class="saved-subtitle">Everything you've hearted, in one place.</p>
+    </header>
+
+    <!-- Product Grid: JavaScript will dynamically render saved cards inside this container -->
+    <div class="saved-grid" id="liked-products-grid"></div>
+
+    <!-- Empty State / Tip Box -->
+    <div class="saved-tip-box">
+      Tap the <i class="fa-regular fa-heart"></i> on any product to save it here
+    </div>
+  </main>
+
+  <script src="liked-items.js"></script>
+
+</body>
+</html>

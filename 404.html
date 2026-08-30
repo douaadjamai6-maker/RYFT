@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ryft — Page Not Found</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <nav class="navbar">
+    <div class="logo">
+      <img src="Logo.jpg" alt="Ryft logo" class="logo-img">
+    </div>
+
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="categories.html">Categories</a></li>
+      <li><a href="add-listing.html">Sell</a></li>
+    </ul>
+
+    <div class="nav-icons">
+      <a href="messages.html" class="icon-circle"><i class="fa-solid fa-comment"></i></a>
+      <a href="#" class="icon-circle"><i class="fa-solid fa-heart"></i></a>
+      
+      <div class="profile-dropdown-wrapper">
+        <a href="buyer-profile.html" class="icon-circle"><i class="fa-solid fa-user"></i></a>
+        <div class="profile-dropdown-menu">
+          <a href="buyer-profile.html" class="dropdown-item"><i class="fa-regular fa-user"></i><span>Your Profile</span></a>
+          <a href="seller-dashboard.html" class="dropdown-item"><i class="fa-solid fa-store"></i><span>Switch to Seller Profile</span></a>
+          <div class="dropdown-divider"></div>
+          <a href="signup-buyer.html" class="dropdown-item logout-item"><i class="fa-solid fa-arrow-right-from-bracket"></i><span>Log out</span></a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 404 Main Wrapper -->
+  <main class="error-container">
+    <div class="error-card">
+      <div class="error-icon-box">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span class="error-badge">404</span>
+      </div>
+      <h2>Oops! Page Not Found</h2>
+      <p>The listing or page you're looking for seems to have explored elsewhere.</p>
+      
+      <div class="error-btn-group">
+        <a href="index.html" class="btn-primary-ryft">Return to RYFT Home</a>
+        <a href="categories.html" class="btn-secondary-ryft">Explore Categories</a>
+      </div>
+    </div>
+  </main>
+
+</body>
+</html>

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ryft — Add New Listing</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    /* Styling adjustments for dynamic upload slot previews & dropdowns */
+    .photo-upload-section label {
+      position: relative;
+      cursor: pointer;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .photo-upload-section label img.preview-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 2;
+    }
+    .remove-btn {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      background: rgba(239, 68, 68, 0.9);
+      color: #ffffff;
+      border: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      cursor: pointer;
+      z-index: 3;
+    }
+    select.listing-input {
+      appearance: auto;
+      background-color: #ffffff;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="logo">
+      <a href="index.html"><img src="Logo.jpg" alt="Ryft logo" class="logo-img"></a>
+    </div>
+    
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="categories.html">Categories</a></li>
+      <li><a href="add-listing.html" class="active">Sell</a></li>
+    </ul>
+
+    <div class="nav-icons">
+      <a href="messages.html" class="icon-circle"><i class="fa-solid fa-comment"></i></a>
+      <a href="saved-items.html" class="icon-circle"><i class="fa-solid fa-heart"></i></a>
+
+      <div class="profile-dropdown-wrapper">
+        <a href="buyer-profile.html" class="icon-circle"><i class="fa-solid fa-user"></i></a>
+        
+        <div class="profile-dropdown-menu">
+          <a href="buyer-profile.html" class="dropdown-item">
+            <i class="fa-regular fa-user"></i>
+            <span>Your Profile</span>
+          </a>
+          <a href="seller-dashboard.html" class="dropdown-item">
+            <i class="fa-solid fa-store"></i>
+            <span>Switch to Seller Profile</span>
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="signup-buyer.html" class="dropdown-item logout-item">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            <span>Log out</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="add-listing-container">
+    <h1 class="page-title">Add New Listing</h1>
+
+    <form class="add-listing-form" id="listing-form">
+      
+      <div class="photo-upload-section">
+        <label class="main-photo-upload">
+          <input type="file" accept="image/*" hidden class="photo-file-input">
+          <i class="fa-solid fa-plus upload-icon"></i>
+          <span>Add main photo</span>
+        </label>
+
+        <div class="sub-photos-column">
+          <label class="sub-photo-upload">
+            <input type="file" accept="image/*" hidden class="photo-file-input">
+            <i class="fa-solid fa-plus upload-icon-sm"></i>
+          </label>
+          <label class="sub-photo-upload">
+            <input type="file" accept="image/*" hidden class="photo-file-input">
+            <i class="fa-solid fa-plus upload-icon-sm"></i>
+          </label>
+        </div>
+      </div>
+
+      <div class="fields-section">
+        
+        <input type="text" id="title" placeholder="Product title" class="listing-input" required>
+
+        <div class="form-row">
+          <input type="number" id="price" placeholder="Price (DA)" class="listing-input" min="1" required>
+          <select id="category" class="listing-input" required>
+            <option value="" disabled selected>Category ▾</option>
+            <option value="Electronics">Electronics</option>
+            <option value="Clothing">Clothing</option>
+            <option value="Beauty">Beauty</option>
+            <option value="Shoes">Shoes</option>
+            <option value="Accessories">Accessories</option>
+          </select>
+        </div>
+
+        <textarea id="description" placeholder="Description" class="listing-input listing-textarea" rows="4"></textarea>
+
+        <div class="form-row">
+          <select id="condition" class="listing-input">
+            <option value="" disabled selected>Condition ▾</option>
+            <option value="New">Brand New</option>
+            <option value="Like New">Like New</option>
+            <option value="Used - Good">Used - Good</option>
+            <option value="Used - Fair">Used - Fair</option>
+          </select>
+          <input type="number" id="quantity" placeholder="Quantity" class="listing-input" min="1" value="1">
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn-draft" id="btn-save-draft">Save as Draft</button>
+          <button type="submit" class="btn-publish">Publish Listing</button>
+        </div>
+
+      </div>
+
+    </form>
+  </main>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const form = document.getElementById("listing-form");
+      const fileInputs = document.querySelectorAll(".photo-file-input");
+      const draftBtn = document.getElementById("btn-save-draft");
+
+      const uploadedImages = [];
+
+      // 1. Image Upload & Instant Preview Handler
+      fileInputs.forEach((input, index) => {
+        const label = input.parentElement;
+
+        input.addEventListener("change", (e) => {
+          const file = e.target.files[0];
+          if (!file) return;
+
+          const reader = new FileReader();
+          reader.onload = (evt) => {
+            const base64Image = evt.target.result;
+            uploadedImages[index] = base64Image;
+
+            // Remove existing preview if present
+            const oldImg = label.querySelector(".preview-img");
+            const oldBtn = label.querySelector(".remove-btn");
+            if (oldImg) oldImg.remove();
+            if (oldBtn) oldBtn.remove();
+
+            // Create image element preview
+            const img = document.createElement("img");
+            img.src = base64Image;
+            img.className = "preview-img";
+
+            // Create remove button overlay
+            const removeBtn = document.createElement("button");
+            removeBtn.type = "button";
+            removeBtn.className = "remove-btn";
+            removeBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+
+            removeBtn.addEventListener("click", (ev) => {
+              ev.stopPropagation();
+              ev.preventDefault();
+              input.value = "";
+              uploadedImages[index] = null;
+              img.remove();
+              removeBtn.remove();
+            });
+
+            label.appendChild(img);
+            label.appendChild(removeBtn);
+          };
+
+          reader.readAsDataURL(file);
+        });
+      });
+
+      // Helper function to extract and construct item payload
+      function getFormData() {
+        return {
+          id: Date.now(),
+          title: document.getElementById("title").value.trim(),
+          price: document.getElementById("price").value ? `${document.getElementById("price").value} DA` : "",
+          category: document.getElementById("category").value,
+          description: document.getElementById("description").value.trim(),
+          condition: document.getElementById("condition").value,
+          quantity: document.getElementById("quantity").value || 1,
+          images: uploadedImages.filter(Boolean),
+          reviewsCount: 0,
+          messagesCount: 0
+        };
+      }
+
+      // 2. Publish Listing Form Submission
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        const newListing = getFormData();
+        
+        // Fallback default image if none uploaded
+        if (newListing.images.length === 0) {
+          newListing.images.push("headphones.jpg"); 
+        }
+
+        // Save into localStorage listings array
+        const existingListings = JSON.parse(localStorage.getItem("ryft_seller_listings") || "[]");
+        existingListings.unshift(newListing);
+        localStorage.setItem("ryft_seller_listings", JSON.stringify(existingListings));
+
+        alert("Listing published successfully!");
+        window.location.href = "seller-dashboard.html";
+      });
+
+      // 3. Save as Draft Handler
+      draftBtn.addEventListener("click", () => {
+        const draftData = getFormData();
+        if (!draftData.title) {
+          alert("Please enter at least a product title to save as draft.");
+          return;
+        }
+
+        const existingDrafts = JSON.parse(localStorage.getItem("ryft_listing_drafts") || "[]");
+        existingDrafts.unshift(draftData);
+        localStorage.setItem("ryft_listing_drafts", JSON.stringify(existingDrafts));
+
+        alert("Listing draft saved!");
+        window.location.href = "seller-dashboard.html";
+      });
+    });
+  </script>
+</body>
+</html>

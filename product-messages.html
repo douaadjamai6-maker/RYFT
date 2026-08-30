@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ryft — Product Messages</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    body {
+      background-color: #f4f6f9;
+      font-family: 'Poppins', sans-serif;
+    }
+    .msg-page-container {
+      max-width: 800px;
+      margin: 30px auto;
+      padding: 20px;
+    }
+    .back-link {
+      color: #2563eb;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 20px;
+    }
+    .msg-header-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 20px;
+    }
+    .msg-thread-card {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 18px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      border: 1px solid #e2e8f0;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .msg-thread-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+    }
+    .buyer-info {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .buyer-avatar {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: #2563eb;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 15px;
+    }
+    .msg-snippet {
+      font-size: 13.5px;
+      color: #64748b;
+      margin-top: 3px;
+    }
+    .msg-time {
+      font-size: 12px;
+      color: #94a3b8;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="logo">
+      <a href="index.html"><img src="Logo.jpg" alt="Ryft logo" class="logo-img"></a>
+    </div>
+  </nav>
+
+  <div class="msg-page-container">
+    <a href="seller-dashboard.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</a>
+    <h1 class="msg-header-title" id="product-title-heading">Messages for Product</h1>
+
+    <div id="messages-list"></div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const title = urlParams.get("title") || "Product";
+      const messageCount = parseInt(urlParams.get("count")) || 3;
+
+      document.getElementById("product-title-heading").textContent = `Inquiries for "${title}" (${messageCount})`;
+
+      const mockBuyers = [
+        { name: "Amine K.", initials: "AK", msg: "Is this item available for instant delivery?", time: "10:42 AM", bg: "#2563eb" },
+        { name: "Sarah B.", initials: "SB", msg: "Can you offer a slight discount if I buy today?", time: "Yesterday", bg: "#10b981" },
+        { name: "Karim M.", initials: "KM", msg: "What is your best price for hand-to-hand delivery?", time: "2 days ago", bg: "#f59e0b" },
+        { name: "Youssef T.", initials: "YT", msg: "Is this still under warranty?", time: "3 days ago", bg: "#8b5cf6" },
+        { name: "Nour H.", initials: "NH", msg: "Can you send extra close-up photos?", time: "4 days ago", bg: "#ec4899" },
+        { name: "Omar D.", initials: "OD", msg: "Do you deliver to Algiers?", time: "1 week ago", bg: "#64748b" }
+      ];
+
+      const messagesList = document.getElementById("messages-list");
+      let htmlStr = "";
+
+      for (let i = 0; i < messageCount; i++) {
+        const buyer = mockBuyers[i % mockBuyers.length];
+        const chatUrl = `messages.html?product=${encodeURIComponent(title)}&buyer=${encodeURIComponent(buyer.name)}`;
+        
+        htmlStr += `
+          <div class="msg-thread-card" onclick="window.location.href='${chatUrl}'">
+            <div class="buyer-info">
+              <div class="buyer-avatar" style="background: ${buyer.bg}">${buyer.initials}</div>
+              <div>
+                <strong style="color: #0f172a; font-size: 15px;">${buyer.name}</strong>
+                <p class="msg-snippet">${buyer.msg}</p>
+              </div>
+            </div>
+            <span class="msg-time">${buyer.time}</span>
+          </div>
+        `;
+      }
+
+      messagesList.innerHTML = htmlStr;
+    });
+  </script>
+</body>
+</html>

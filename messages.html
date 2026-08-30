@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ryft — Messages</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <nav class="navbar">
+    <div class="logo">
+      <a href="index.html"><img src="Logo.jpg" alt="Ryft logo" class="logo-img"></a>
+    </div>
+
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="categories.html">Categories</a></li>
+      <li><a href="add-listing.html">Sell</a></li>
+    </ul>
+
+    <div class="nav-icons">
+      <!-- Active Message Icon -->
+      <a href="messages.html" class="icon-circle active-nav"><i class="fa-solid fa-comment"></i></a>
+
+      <!-- Heart / Saved Items Icon -->
+      <a href="saved-items.html" class="icon-circle"><i class="fa-solid fa-heart"></i></a>
+
+      <!-- Profile Dropdown Wrapper -->
+      <div class="profile-dropdown-wrapper">
+        <a href="buyer-profile.html" class="icon-circle"><i class="fa-solid fa-user"></i></a>
+        
+        <div class="profile-dropdown-menu">
+          <a href="buyer-profile.html" class="dropdown-item">
+            <i class="fa-regular fa-user"></i>
+            <span>Your Profile</span>
+          </a>
+          <a href="seller-dashboard.html" class="dropdown-item">
+            <i class="fa-solid fa-store"></i>
+            <span>Switch to Seller Profile</span>
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="signup-buyer.html" class="dropdown-item logout-item">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            <span>Log out</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Messages Inbox Section -->
+  <section class="inbox-page">
+    <h1 class="inbox-heading">Messages:</h1>
+
+    <div class="inbox-list">
+
+      <a href="conversation.html?seller=electro%20dz" class="inbox-row" data-seller="electro dz">
+        <img src="electrologo.jpg" alt="Electro dz" class="inbox-avatar">
+        <div class="inbox-text">
+          <p class="inbox-name">Electro dz</p>
+          <p class="inbox-preview">Oui kho, l produit disponible</p>
+        </div>
+        <div class="inbox-meta">
+          <span class="inbox-time">2m</span>
+          <span class="unread-dot"></span>
+        </div>
+      </a>
+
+      <a href="conversation.html?seller=thewoman_dz" class="inbox-row" data-seller="thewoman_dz">
+        <img src="clotheslogo.jpg" alt="Thewoman dz" class="inbox-avatar">
+        <div class="inbox-text">
+          <p class="inbox-name">Thewoman dz</p>
+          <p class="inbox-preview">Sent a product</p>
+        </div>
+        <div class="inbox-meta">
+          <span class="inbox-time">12m</span>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const STORAGE_KEY = "ryft_read_messages";
+
+      // Fetch list of sellers whose chats have been opened
+      const getReadSellers = () => {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+      };
+
+      // Save seller to read list
+      const markAsRead = (sellerId) => {
+        const readList = getReadSellers();
+        if (!readList.includes(sellerId)) {
+          readList.push(sellerId);
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(readList));
+        }
+      };
+
+      const inboxRows = document.querySelectorAll(".inbox-row");
+      const readSellers = getReadSellers();
+
+      inboxRows.forEach((row) => {
+        // Get seller name identifier from data attribute or URL query
+        const urlParams = new URLSearchParams(row.getAttribute("href").split("?")[1]);
+        const sellerId = row.getAttribute("data-seller") || urlParams.get("seller");
+
+        const unreadDot = row.querySelector(".unread-dot");
+
+        // If the chat has already been opened, hide the dot
+        if (unreadDot && readSellers.includes(sellerId)) {
+          unreadDot.style.display = "none";
+        }
+
+        // On click, store as read so the dot stays gone when returning
+        row.addEventListener("click", () => {
+          if (sellerId) {
+            markAsRead(sellerId);
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>

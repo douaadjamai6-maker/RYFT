@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ryft</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <nav class="navbar">
+    <div class="logo">
+      <a href="index.html"><img src="Logo.jpg" alt="Ryft logo" class="logo-img"></a>
+    </div>
+
+    <ul class="nav-links">
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="categories.html">Categories</a></li>
+      <li><a href="add-listing.html">Sell</a></li>
+    </ul>
+    
+    <div class="nav-icons">
+      <!-- Message Icon -->
+      <a href="messages.html" class="icon-circle"><i class="fa-solid fa-comment"></i></a>
+
+      <!-- Heart / Saved Items Icon -->
+      <a href="saved-items.html" class="icon-circle"><i class="fa-solid fa-heart"></i></a>
+
+      <!-- Profile Dropdown Wrapper -->
+      <div class="profile-dropdown-wrapper">
+        <a href="buyer-profile.html" class="icon-circle"><i class="fa-solid fa-user"></i></a>
+        
+        <div class="profile-dropdown-menu">
+          <a href="buyer-profile.html" class="dropdown-item">
+            <i class="fa-regular fa-user"></i>
+            <span>Your Profile</span>
+          </a>
+          <a href="seller-dashboard.html" class="dropdown-item">
+            <i class="fa-solid fa-store"></i>
+            <span>Switch to Seller Profile</span>
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="signup-buyer.html" class="dropdown-item logout-item">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            <span>Log out</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <img src="hero_image_code.png" alt="Ryft hero" class="hero-bg">
+    <div class="hero-text">
+      <p class="eyebrow">FIND ALGERIAN TRENDING PRODUCTS</p>
+      <h1>Every Shop. One<br>Search Away</h1>
+      <p class="hero-subtext">Search products from Algerian shops across social media filtered by your budget, in one place.</p>
+      <div class="hero-buttons">
+        <a href="categories.html" class="btn btn-primary">Browse Products</a>
+        <a href="signup-seller.html" class="btn-secondary">Become a Seller</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Search & Filter Section -->
+  <section class="search-section">
+    <div class="search-bar">
+      <select class="search-category" id="search-category">
+        <option value="All">All</option>
+        <option value="Electronics">Electronics</option>
+        <option value="Clothing">Clothing</option>
+        <option value="Beauty">Beauty</option>
+        <option value="Shoes">Shoes</option>
+      </select>
+      <input type="text" id="search-input" placeholder="Search products...">
+      <button class="camera-btn" aria-label="Camera Search"><i class="fa-solid fa-camera"></i></button>
+      <button class="search-btn" id="home-search-btn" aria-label="Search"><i class="fa-solid fa-magnifying-glass"></i></button>
+    </div>
+
+    <div class="filter-row">
+
+      <!-- Budget Filter Toggle -->
+      <div class="filter-dropdown-wrapper" id="budget-wrapper">
+        <button class="filter-pill" id="budget-pill">
+          Budget <i class="fa-solid fa-chevron-down"></i>
+        </button>
+
+        <div class="filter-dropdown-menu budget-menu">
+          <label>Max Budget (DA)</label>
+          <div class="budget-input-group">
+            <input type="number" id="budget-input" placeholder="e.g. 5000" min="0">
+            <span>DA</span>
+          </div>
+          <div class="filter-actions">
+            <button class="btn-reset-filter" id="reset-budget">Reset</button>
+            <button class="btn-apply-filter" id="apply-budget">Apply</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Location Filter Toggle -->
+      <div class="filter-dropdown-wrapper" id="location-wrapper">
+        <button class="filter-pill" id="location-pill">
+          <span id="location-pill-text">Location</span> <i class="fa-solid fa-chevron-down"></i>
+        </button>
+
+        <div class="filter-dropdown-menu location-menu">
+          <div class="wilaya-search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="wilaya-search" placeholder="Search Wilaya...">
+          </div>
+
+          <div class="wilaya-list" id="wilaya-list"></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Product Grid -->
+  <section class="product-grid" id="product-grid">
+
+    <!-- Card 1: Electronics -->
+    <article class="product-card" data-category="electronics">
+      <a href="product-detail.html?title=Wireless%20Headphones&price=3,500%20DA&image=headphones.jpg&shop=electro%20dz" class="card-link-top">
+        <div class="card-image">
+          <span class="tag tag-electronics">Electronics</span>
+          <a href="conversation.html?title=Wireless%20Headphones&price=3,500%20DA&image=headphones.jpg&shop=electro%20dz" class="icon-badge" onclick="event.stopPropagation();">
+            <i class="fa-solid fa-comment"></i>
+          </a>
+          <img src="headphones.jpg" alt="Wireless Headphones">
+        </div>
+        <div class="card-body">
+          <p class="card-title">Wireless Headphones</p>
+          <p class="card-price">3,500 DA</p>
+        </div>
+      </a>
+      <div class="card-footer">
+        <a href="shop-profile.html?shop=electro%20dz" class="shop-link">
+          <img src="electrologo.jpg" alt="electro dz" class="shop-logo">
+          <span class="shop-name">electro dz</span>
+        </a>
+        <span class="shop-location">Tlemcen</span>
+      </div>
+    </article>
+
+    <!-- Card 2: Shoes -->
+    <article class="product-card" data-category="shoes">
+      <a href="product-detail.html?title=Woman%20shoes&price=5,000%20DA&image=shoes.jpg&shop=the_shoe_dz" class="card-link-top">
+        <div class="card-image">
+          <span class="tag tag-shoes">Shoes</span>
+          <a href="conversation.html?title=Woman%20shoes&price=5,000%20DA&image=shoes.jpg&shop=the_shoe_dz" class="icon-badge" onclick="event.stopPropagation();">
+            <i class="fa-solid fa-comment"></i>
+          </a>
+          <img src="shoes.jpg" alt="Woman shoes">
+        </div>
+        <div class="card-body">
+          <p class="card-title">Woman shoes</p>
+          <p class="card-price">5,000 DA</p>
+        </div>
+      </a>
+      <div class="card-footer">
+        <a href="shop-profile.html?shop=the_shoe_dz" class="shop-link">
+          <img src="shoeslogo.jpg" alt="the_shoe_dz" class="shop-logo">
+          <span class="shop-name">the_shoe_dz</span>
+        </a>
+        <span class="shop-location">Oran</span>
+      </div>
+    </article>
+
+    <!-- Card 3: Clothing -->
+    <article class="product-card" data-category="clothing">
+      <a href="product-detail.html?title=Woman%20fur%20coat&price=15,000%20DA&image=furcoat.jpg&shop=thewoman_dz" class="card-link-top">
+        <div class="card-image">
+          <span class="tag tag-clothing">Women clothes</span>
+          <a href="conversation.html?title=Woman%20fur%20coat&price=15,000%20DA&image=furcoat.jpg&shop=thewoman_dz" class="icon-badge" onclick="event.stopPropagation();">
+            <i class="fa-solid fa-comment"></i>
+          </a>
+          <img src="furcoat.jpg" alt="Woman fur coat">
+        </div>
+        <div class="card-body">
+          <p class="card-title">Woman fur coat</p>
+          <p class="card-price">15,000 DA</p>
+        </div>
+      </a>
+      <div class="card-footer">
+        <a href="shop-profile.html?shop=thewoman_dz" class="shop-link">
+          <img src="clotheslogo.jpg" alt="thewoman_dz" class="shop-logo">
+          <span class="shop-name">thewoman_dz</span>
+        </a>
+        <span class="shop-location">Algiers</span>
+      </div>
+    </article>
+
+    <!-- Card 4: Clothing -->
+    <article class="product-card" data-category="clothing">
+      <a href="product-detail.html?title=Woman%20long%20sleeves&price=4,000%20DA&image=shirt.jpg&shop=thewoman_dz" class="card-link-top">
+        <div class="card-image">
+          <span class="tag tag-clothing">Women clothes</span>
+          <a href="conversation.html?title=Woman%20long%20sleeves&price=4,000%20DA&image=shirt.jpg&shop=thewoman_dz" class="icon-badge" onclick="event.stopPropagation();">
+            <i class="fa-solid fa-comment"></i>
+          </a>
+          <img src="shirt.jpg" alt="Woman long sleeves">
+        </div>
+        <div class="card-body">
+          <p class="card-title">Woman long sleeves</p>
+          <p class="card-price">4,000 DA</p>
+        </div>
+      </a>
+      <div class="card-footer">
+        <a href="shop-profile.html?shop=thewoman_dz" class="shop-link">
+          <img src="clotheslogo.jpg" alt="thewoman_dz" class="shop-logo">
+          <span class="shop-name">thewoman_dz</span>
+        </a>
+        <span class="shop-location">Annaba</span>
+      </div>
+    </article>
+
+    <!-- Card 5: Beauty -->
+    <article class="product-card" data-category="beauty">
+      <a href="product-detail.html?title=Mac%20Lipstick&price=8,000%20DA&image=lipstick.jpg&shop=makeup_dz" class="card-link-top">
+        <div class="card-image">
+          <span class="tag tag-beauty">Beauty</span>
+          <a href="conversation.html?title=Mac%20Lipstick&price=8,000%20DA&image=lipstick.jpg&shop=makeup_dz" class="icon-badge" onclick="event.stopPropagation();">
+            <i class="fa-solid fa-comment"></i>
+          </a>
+          <img src="lipstick.jpg" alt="Mac Lipstick">
+        </div>
+        <div class="card-body">
+          <p class="card-title">Mac Lipstick</p>
+          <p class="card-price">8,000 DA</p>
+        </div>
+      </a>
+      <div class="card-footer">
+        <a href="shop-profile.html?shop=makeup_dz" class="shop-link">
+          <img src="makeuplogo.jpg" alt="makeup_dz" class="shop-logo">
+          <span class="shop-name">makeup_dz</span>
+        </a>
+        <span class="shop-location">Algiers</span>
+      </div>
+    </article>
+
+  </section>
+
+  <!-- Camera Search Modal -->
+  <div class="modal-overlay" id="camera-modal">
+    <div class="modal-content">
+      <button class="modal-close" id="modal-close"><i class="fa-solid fa-xmark"></i></button>
+      
+      <div class="modal-header">
+        <i class="fa-solid fa-camera modal-icon"></i>
+        <h2>Visual Search</h2>
+        <p>Upload a photo of an item to find matching products on Ryft</p>
+      </div>
+
+      <div class="upload-zone" id="upload-zone">
+        <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
+        <p>Drag & drop your product image here, or <span>browse</span></p>
+        <input type="file" id="camera-file-input" accept="image/*" hidden>
+      </div>
+
+      <div class="image-preview-container" id="preview-container" style="display: none;">
+        <img src="" id="image-preview" alt="Product preview">
+        <button class="btn-remove-img" id="remove-img-btn"><i class="fa-solid fa-trash"></i></button>
+      </div>
+
+      <button class="btn-search-image" id="btn-search-image" disabled>Search with Image</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+
+  <!-- Search Redirect Script -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const searchInput = document.getElementById("search-input");
+      const categorySelect = document.getElementById("search-category");
+      const searchBtn = document.getElementById("home-search-btn");
+
+      function executeHomeSearch() {
+        const query = searchInput ? searchInput.value.trim() : "";
+        const category = categorySelect ? categorySelect.value : "All";
+
+        // Routes directly to search-results.html (plural)
+        window.location.href = `search-results.html?query=${encodeURIComponent(query)}&category=${encodeURIComponent(category)}`;
+      }
+
+      if (searchBtn) {
+        searchBtn.addEventListener("click", (e) => {
+          e.preventDefault();
+          executeHomeSearch();
+        });
+      }
+
+      if (searchInput) {
+        searchInput.addEventListener("keypress", (e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            executeHomeSearch();
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>

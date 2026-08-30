@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ryft — Search Results</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    /* Filter Row Layout Alignment */
+    .results-filter-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 20px 0;
+      width: 100%;
+    }
+
+    /* Push Sort pill to the far right */
+    .results-filter-row .sort-wrapper-right {
+      margin-left: auto;
+    }
+
+    /* Dropdown Component Styles */
+    .filter-dropdown-wrapper {
+      position: relative;
+    }
+
+    .filter-pill, .sort-pill {
+      background: #f3f4f6;
+      border: 1px solid #e5e7eb;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #374151;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.2s ease;
+    }
+
+    .filter-pill:hover, .sort-pill:hover {
+      background: #e5e7eb;
+    }
+
+    .filter-dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 110%;
+      left: 0;
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      padding: 12px;
+      z-index: 100;
+      min-width: 220px;
+    }
+
+    /* Align sort menu to right edge */
+    .sort-wrapper-right .filter-dropdown-menu {
+      left: auto;
+      right: 0;
+    }
+
+    .filter-dropdown-wrapper.active .filter-dropdown-menu {
+      display: block;
+    }
+
+    /* Option Lists & Buttons */
+    .filter-option-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .filter-option-btn, .sort-option-btn, .wilaya-option-btn {
+      background: none;
+      border: none;
+      text-align: left;
+      padding: 8px 12px;
+      font-size: 14px;
+      color: #374151;
+      border-radius: 6px;
+      cursor: pointer;
+      width: 100%;
+      transition: background 0.15s ease;
+    }
+
+    .filter-option-btn:hover, .sort-option-btn:hover, .wilaya-option-btn:hover {
+      background: #f3f4f6;
+    }
+
+    .filter-option-btn.active, .sort-option-btn.active, .wilaya-option-btn.active {
+      background: #eff6ff;
+      color: #2563eb;
+      font-weight: 600;
+    }
+
+    /* Budget & Wilaya Specific Controls */
+    .budget-menu label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #6b7280;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .budget-input-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .budget-input-group input {
+      width: 100%;
+      padding: 6px 10px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    .filter-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .btn-reset-filter, .btn-apply-filter {
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-reset-filter {
+      background: none;
+      border: 1px solid #d1d5db;
+      color: #4b5563;
+    }
+
+    .btn-apply-filter {
+      background: #111827;
+      border: none;
+      color: #ffffff;
+    }
+
+    .wilaya-search-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      margin-bottom: 8px;
+    }
+
+    .wilaya-search-box input {
+      border: none;
+      outline: none;
+      font-size: 13px;
+      width: 100%;
+    }
+
+    .wilaya-list {
+      max-height: 200px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="logo">
+      <a href="index.html"><img src="Logo.jpg" alt="Ryft logo" class="logo-img"></a>
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="categories.html">Categories</a></li>
+      <li><a href="add-listing.html">Sell</a></li>
+    </ul>
+    <div class="nav-icons">
+      <a href="messages.html" class="icon-circle"><i class="fa-solid fa-comment"></i></a>
+      <a href="saved-items.html" class="icon-circle"><i class="fa-solid fa-heart"></i></a>
+      <div class="profile-dropdown-wrapper">
+        <a href="buyer-profile.html" class="icon-circle"><i class="fa-solid fa-user"></i></a>
+        
+        <div class="profile-dropdown-menu">
+          <a href="buyer-profile.html" class="dropdown-item">
+            <i class="fa-regular fa-user"></i>
+            <span>Your Profile</span>
+          </a>
+          <a href="seller-dashboard.html" class="dropdown-item">
+            <i class="fa-solid fa-store"></i>
+            <span>Switch to Seller Profile</span>
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="signup-buyer.html" class="dropdown-item logout-item">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            <span>Log out</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <section class="results-page">
+
+    <!-- Top Search Header -->
+    <div class="search-bar results-search-bar">
+      <select class="search-category" id="search-category-select">
+        <option value="All">All</option>
+        <option value="Electronics">Electronics</option>
+        <option value="Clothing">Clothing</option>
+        <option value="Beauty">Beauty</option>
+        <option value="Shoes">Shoes</option>
+      </select>
+      <input type="text" id="search-input-field" placeholder="Search products...">
+      <button class="camera-btn"><i class="fa-solid fa-camera"></i></button>
+      <button class="search-btn" id="search-submit-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
+    </div>
+
+    <!-- Filter & Sort Interactive Row -->
+    <div class="results-filter-row">
+      
+      <!-- Left Filters -->
+      <div class="filter-dropdown-wrapper" id="budget-wrapper">
+        <button class="filter-pill" id="budget-pill">
+          <span id="budget-pill-text">Budget</span> <i class="fa-solid fa-chevron-down"></i>
+        </button>
+        <div class="filter-dropdown-menu budget-menu">
+          <label>Max Budget (DA)</label>
+          <div class="budget-input-group">
+            <input type="number" id="budget-input" placeholder="e.g. 5000" min="0">
+            <span>DA</span>
+          </div>
+          <div class="filter-actions">
+            <button class="btn-reset-filter" id="reset-budget">Reset</button>
+            <button class="btn-apply-filter" id="apply-budget">Apply</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="filter-dropdown-wrapper" id="category-filter-wrapper">
+        <button class="filter-pill" id="category-pill">
+          <span id="category-pill-text">Category</span> <i class="fa-solid fa-chevron-down"></i>
+        </button>
+        <div class="filter-dropdown-menu category-menu">
+          <div class="filter-option-list">
+            <button class="filter-option-btn active" data-cat="All">All Categories</button>
+            <button class="filter-option-btn" data-cat="Electronics">Electronics</button>
+            <button class="filter-option-btn" data-cat="Clothing">Clothing</button>
+            <button class="filter-option-btn" data-cat="Beauty">Beauty</button>
+            <button class="filter-option-btn" data-cat="Shoes">Shoes</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="filter-dropdown-wrapper" id="location-wrapper">
+        <button class="filter-pill" id="location-pill">
+          <span id="location-pill-text">Location</span> <i class="fa-solid fa-chevron-down"></i>
+        </button>
+        <div class="filter-dropdown-menu location-menu">
+          <div class="wilaya-search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="wilaya-search" placeholder="Search Wilaya...">
+          </div>
+          <div class="wilaya-list" id="wilaya-list">
+            <!-- Dynamically populated via JS with all 58 Wilayas -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Sort Filter (Pushed right with CSS margin-left: auto) -->
+      <div class="filter-dropdown-wrapper sort-wrapper-right" id="sort-wrapper">
+        <button class="sort-pill" id="sort-pill">
+          <span id="sort-pill-text">Sort: Newest</span> <i class="fa-solid fa-chevron-down"></i>
+        </button>
+        <div class="filter-dropdown-menu sort-menu">
+          <div class="filter-option-list">
+            <button class="sort-option-btn active" data-sort="newest">Newest</button>
+            <button class="sort-option-btn" data-sort="price-low">Price: Low to High</button>
+            <button class="sort-option-btn" data-sort="price-high">Price: High to Low</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Product Grid -->
+    <div class="results-grid" id="results-grid-container"></div>
+
+  </section>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // Complete List of 58 Algerian Wilayas
+      const wilayas = [
+        "01 - Adrar", "02 - Chlef", "03 - Laghouat", "04 - Oum El Bouaghi", "05 - Batna", 
+        "06 - Béjaïa", "07 - Biskra", "08 - Béchar", "09 - Blida", "10 - Bouira", 
+        "11 - Tamanrasset", "12 - Tébessa", "13 - Tlemcen", "14 - Tiaret", "15 - Tizi Ouzou", 
+        "16 - Algiers", "17 - Djelfa", "18 - Jijel", "19 - Sétif", "20 - Saïda", 
+        "21 - Skikda", "22 - Sidi Bel Abbès", "23 - Annaba", "24 - Guelma", "25 - Constantine", 
+        "26 - Médéa", "27 - Mostaganem", "28 - M'Sila", "29 - Mascara", "30 - Ouargla", 
+        "31 - Oran", "32 - El Bayadh", "33 - Illizi", "34 - Bordj Bou Arréridj", "35 - Boumerdès", 
+        "36 - El Tarf", "37 - Tindouf", "38 - Tissemsilt", "39 - El Oued", "40 - Khenchela", 
+        "41 - Souk Ahras", "42 - Tipaza", "43 - Mila", "44 - Aïn Defla", "45 - Naâma", 
+        "46 - Aïn Témouchent", "47 - Ghardaïa", "48 - Relizane", "49 - El M'Ghair", "50 - El Meniaa", 
+        "51 - Ouled Djellal", "52 - Bordj Baji Mokhtar", "53 - Béni Abbès", "54 - Timimoun", "55 - Touggourt", 
+        "56 - Djanet", "57 - In Salah", "58 - In Guezzam"
+      ];
+
+      const productsData = [
+        { id: 1, title: "Wireless headphones", rawPrice: 3500, price: "3,500 DA", image: "headphones.jpg", category: "Electronics", shopName: "Electro dz", shopLogo: "electrologo.jpg", location: "Tlemcen", dateAdded: "2026-08-28" },
+        { id: 2, title: "Studio headphones", rawPrice: 5200, price: "5,200 DA", image: "studio-headphones.jpg", category: "Electronics", shopName: "sound_house", shopLogo: "soundhouselogo.jpg", location: "Oran", dateAdded: "2026-08-25" },
+        { id: 3, title: "Kids headphones", rawPrice: 1800, price: "1,800 DA", image: "kids-headphones.jpg", category: "Electronics", shopName: "baby_corner", shopLogo: "babycornerlogo.jpg", location: "Algiers", dateAdded: "2026-08-29" },
+        { id: 4, title: "Gaming headset", rawPrice: 6000, price: "6,000 DA", image: "gaming-headset.jpg", category: "Electronics", shopName: "gamer_dz", shopLogo: "gamerdzlogo.jpg", location: "Tlemcen", dateAdded: "2026-08-20" },
+        { id: 5, title: "Woman fur coat", rawPrice: 15000, price: "15,000 DA", image: "furcoat.jpg", category: "Clothing", shopName: "thewoman_dz", shopLogo: "clotheslogo.jpg", location: "Algiers", dateAdded: "2026-08-27" },
+        { id: 6, title: "Woman long sleeves", rawPrice: 4000, price: "4,000 DA", image: "shirt.jpg", category: "Clothing", shopName: "thewoman_dz", shopLogo: "clotheslogo.jpg", location: "Algiers", dateAdded: "2026-08-26" },
+        { id: 7, title: "Woman shoes", rawPrice: 5000, price: "5,000 DA", image: "shoes.jpg", category: "Shoes", shopName: "the_shoe_dz", shopLogo: "shoeslogo.jpg", location: "Oran", dateAdded: "2026-08-22" },
+        { id: 8, title: "Mac Lipstick", rawPrice: 8000, price: "8,000 DA", image: "lipstick.jpg", category: "Beauty", shopName: "makeup_dz", shopLogo: "makeuplogo.jpg", location: "Algiers", dateAdded: "2026-08-24" }
+      ];
+
+      const filterState = {
+        query: "",
+        category: "All",
+        maxBudget: null,
+        location: "All",
+        sort: "newest"
+      };
+
+      const categorySelect = document.getElementById("search-category-select");
+      const inputField = document.getElementById("search-input-field");
+      const searchBtn = document.getElementById("search-submit-btn");
+      const gridContainer = document.getElementById("results-grid-container");
+      const wilayaListContainer = document.getElementById("wilaya-list");
+
+      // Render Wilayas List dynamically into the Location Dropdown
+      if (wilayaListContainer) {
+        let wilayaHtml = `<button class="wilaya-option-btn active" data-loc="All">All Locations</button>`;
+        wilayas.forEach(w => {
+          // Extract name without number prefix for filtering matching (e.g. "Algiers" from "16 - Algiers")
+          const cleanName = w.includes("-") ? w.split("-")[1].trim() : w;
+          wilayaHtml += `<button class="wilaya-option-btn" data-loc="${cleanName}">${w}</button>`;
+        });
+        wilayaListContainer.innerHTML = wilayaHtml;
+      }
+
+      const urlParams = new URLSearchParams(window.location.search);
+      filterState.query = urlParams.get("query") || urlParams.get("search") || "";
+      filterState.category = urlParams.get("category") || "All";
+
+      if (inputField) inputField.value = filterState.query;
+      if (categorySelect) {
+        const matchingOption = Array.from(categorySelect.options).find(opt => opt.value.toLowerCase() === filterState.category.toLowerCase());
+        if (matchingOption) categorySelect.value = matchingOption.value;
+      }
+
+      const categoryPillText = document.getElementById("category-pill-text");
+      if (categoryPillText) categoryPillText.textContent = filterState.category === "All" ? "Category" : filterState.category;
+
+      const renderResults = () => {
+        if (!gridContainer) return;
+
+        let filtered = productsData.filter(item => {
+          const matchesQuery = item.title.toLowerCase().includes(filterState.query.toLowerCase().trim());
+          const matchesCategory = filterState.category === "All" || item.category.toLowerCase() === filterState.category.toLowerCase();
+          const matchesBudget = filterState.maxBudget === null || item.rawPrice <= filterState.maxBudget;
+          const matchesLocation = filterState.location === "All" || item.location.toLowerCase() === filterState.location.toLowerCase();
+          return matchesQuery && matchesCategory && matchesBudget && matchesLocation;
+        });
+
+        if (filterState.sort === "price-low") {
+          filtered.sort((a, b) => a.rawPrice - b.rawPrice);
+        } else if (filterState.sort === "price-high") {
+          filtered.sort((a, b) => b.rawPrice - a.rawPrice);
+        } else if (filterState.sort === "newest") {
+          filtered.sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded));
+        }
+
+        if (filtered.length === 0) {
+          gridContainer.innerHTML = `
+            <div style="grid-column: 1 / -1; text-align: center; padding: 48px 16px; color: #6b7280;">
+              <h3>No matching products found</h3>
+              <p>Try resetting filters or adjusting your search.</p>
+            </div>
+          `;
+          return;
+        }
+
+        gridContainer.innerHTML = filtered.map(item => `
+          <article class="product-card">
+            <a href="product-detail.html?title=${encodeURIComponent(item.title)}&price=${encodeURIComponent(item.price)}&image=${encodeURIComponent(item.image)}&shop=${encodeURIComponent(item.shopName)}" class="card-link-top">
+              <div class="card-image">
+                <span class="tag tag-${item.category.toLowerCase()}">${item.category}</span>
+                <div class="icon-badge"><i class="fa-solid fa-comment"></i></div>
+                <img src="${item.image}" alt="${item.title}">
+              </div>
+              <div class="card-body">
+                <p class="card-title">${item.title}</p>
+                <p class="card-price">${item.price}</p>
+              </div>
+            </a>
+            <div class="card-footer">
+              <a href="shop-profile.html?shop=${encodeURIComponent(item.shopName)}" class="shop-link">
+                <img src="${item.shopLogo}" alt="${item.shopName}" class="shop-logo">
+                <span class="shop-name">${item.shopName}</span>
+              </a>
+              <span class="shop-location">${item.location}</span>
+            </div>
+          </article>
+        `).join("");
+      };
+
+      // Toggle Dropdowns
+      const wrappers = document.querySelectorAll(".filter-dropdown-wrapper");
+      wrappers.forEach(wrapper => {
+        const button = wrapper.querySelector(".filter-pill, .sort-pill");
+        if (button) {
+          button.addEventListener("click", (e) => {
+            e.stopPropagation();
+            wrappers.forEach(w => { if (w !== wrapper) w.classList.remove("active"); });
+            wrapper.classList.toggle("active");
+          });
+        }
+      });
+
+      document.addEventListener("click", () => {
+        wrappers.forEach(w => w.classList.remove("active"));
+      });
+
+      document.querySelectorAll(".filter-dropdown-menu").forEach(menu => {
+        menu.addEventListener("click", (e) => e.stopPropagation());
+      });
+
+      // Budget Control
+      const budgetInput = document.getElementById("budget-input");
+      const applyBudgetBtn = document.getElementById("apply-budget");
+      const resetBudgetBtn = document.getElementById("reset-budget");
+      const budgetPillText = document.getElementById("budget-pill-text");
+
+      if (applyBudgetBtn) {
+        applyBudgetBtn.addEventListener("click", () => {
+          const val = parseFloat(budgetInput.value);
+          if (!isNaN(val) && val > 0) {
+            filterState.maxBudget = val;
+            if (budgetPillText) budgetPillText.textContent = `≤ ${val} DA`;
+          } else {
+            filterState.maxBudget = null;
+            if (budgetPillText) budgetPillText.textContent = "Budget";
+          }
+          document.getElementById("budget-wrapper").classList.remove("active");
+          renderResults();
+        });
+      }
+
+      if (resetBudgetBtn) {
+        resetBudgetBtn.addEventListener("click", () => {
+          budgetInput.value = "";
+          filterState.maxBudget = null;
+          if (budgetPillText) budgetPillText.textContent = "Budget";
+          document.getElementById("budget-wrapper").classList.remove("active");
+          renderResults();
+        });
+      }
+
+      // Category Pill
+      const catOptionBtns = document.querySelectorAll("#category-filter-wrapper .filter-option-btn");
+      catOptionBtns.forEach(btn => {
+        btn.addEventListener("click", () => {
+          catOptionBtns.forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+
+          const selectedCat = btn.getAttribute("data-cat");
+          filterState.category = selectedCat;
+          if (categorySelect) categorySelect.value = selectedCat;
+          if (categoryPillText) categoryPillText.textContent = selectedCat === "All" ? "Category" : selectedCat;
+
+          document.getElementById("category-filter-wrapper").classList.remove("active");
+          renderResults();
+        });
+      });
+
+      // Location Pill Options Binding
+      const locationPillText = document.getElementById("location-pill-text");
+      const wilayaSearchInput = document.getElementById("wilaya-search");
+
+      if (wilayaListContainer) {
+        wilayaListContainer.addEventListener("click", (e) => {
+          const btn = e.target.closest(".wilaya-option-btn");
+          if (!btn) return;
+
+          const allWilayaBtns = wilayaListContainer.querySelectorAll(".wilaya-option-btn");
+          allWilayaBtns.forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+
+          const selectedLoc = btn.getAttribute("data-loc");
+          filterState.location = selectedLoc;
+          if (locationPillText) locationPillText.textContent = selectedLoc === "All" ? "Location" : selectedLoc;
+
+          document.getElementById("location-wrapper").classList.remove("active");
+          renderResults();
+        });
+      }
+
+      // Live Search within the 58 Wilayas
+      if (wilayaSearchInput) {
+        wilayaSearchInput.addEventListener("input", (e) => {
+          const term = e.target.value.toLowerCase().trim();
+          const allWilayaBtns = wilayaListContainer.querySelectorAll(".wilaya-option-btn");
+          allWilayaBtns.forEach(btn => {
+            btn.style.display = btn.textContent.toLowerCase().includes(term) ? "block" : "none";
+          });
+        });
+      }
+
+      // Sort Pill
+      const sortOptionBtns = document.querySelectorAll("#sort-wrapper .sort-option-btn");
+      const sortPillText = document.getElementById("sort-pill-text");
+
+      sortOptionBtns.forEach(btn => {
+        btn.addEventListener("click", () => {
+          sortOptionBtns.forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+
+          const selectedSort = btn.getAttribute("data-sort");
+          filterState.sort = selectedSort;
+          if (sortPillText) sortPillText.textContent = `Sort: ${btn.textContent}`;
+
+          document.getElementById("sort-wrapper").classList.remove("active");
+          renderResults();
+        });
+      });
+
+      // Execute Header Search
+      const executeTopSearch = () => {
+        filterState.query = inputField.value;
+        filterState.category = categorySelect.value;
+        
+        if (categoryPillText) categoryPillText.textContent = filterState.category === "All" ? "Category" : filterState.category;
+
+        const newUrl = `${window.location.pathname}?query=${encodeURIComponent(filterState.query)}&category=${encodeURIComponent(filterState.category)}`;
+        window.history.pushState({ path: newUrl }, "", newUrl);
+
+        renderResults();
+      };
+
+      if (searchBtn) searchBtn.addEventListener("click", executeTopSearch);
+      if (inputField) {
+        inputField.addEventListener("keypress", (e) => {
+          if (e.key === "Enter") executeTopSearch();
+        });
+      }
+
+      renderResults();
+    });
+  </script>
+</body>
+</html>

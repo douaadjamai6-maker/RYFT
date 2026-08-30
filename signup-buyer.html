@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ryft — Sign Up</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    /* Utility styles for interactive controls */
+    .input-with-action {
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
+    .input-action-btn {
+      position: absolute;
+      right: 12px;
+      background: none;
+      border: none;
+      color: #2563eb;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .password-toggle-btn {
+      position: absolute;
+      right: 12px;
+      background: none;
+      border: none;
+      color: #6b7280;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body class="auth-body">
+
+  <header class="auth-header">
+    <a href="index.html" class="logo">
+      <img src="Logo.jpg" alt="Ryft logo" class="logo-img">
+    </a>
+  </header>
+
+  <main class="auth-container">
+    <p class="auth-label">I want to:</p>
+
+    <div class="role-toggle">
+      <a href="signup-buyer.html" class="role-btn active">Buy Product</a>
+      <a href="signup-seller.html" class="role-btn">Sell Product</a>
+    </div>
+
+    <form class="auth-form" id="buyer-signup-form" novalidate>
+      <input type="text" id="buyer-fullname" placeholder="Full name" class="auth-input" required>
+      
+      <div class="input-with-action">
+        <input type="tel" id="buyer-phone" placeholder="Phone number" class="auth-input" style="width: 100%;" required>
+        <button type="button" id="send-otp-btn" class="input-action-btn">Send OTP</button>
+      </div>
+
+      <input type="text" id="buyer-otp" placeholder="OTP code (sent via SMS)" class="auth-input" required>
+      
+      <div class="input-with-action">
+        <input type="password" id="buyer-password" placeholder="Password (min 6 characters)" class="auth-input" style="width: 100%;" required minlength="6">
+        <button type="button" id="toggle-password-btn" class="password-toggle-btn"><i class="fa-regular fa-eye"></i></button>
+      </div>
+
+      <button type="submit" id="buyer-submit-btn" class="auth-submit-btn">Create Account</button>
+    </form>
+
+    <div class="google-wrapper">
+      <button class="google-btn" id="google-signup-btn" aria-label="Sign up with Google">
+        <svg class="google-icon" viewBox="0 0 48 48">
+          <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+          <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+          <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+          <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+        </svg>
+      </button>
+    </div>
+  </main>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const form = document.getElementById("buyer-signup-form");
+      const fullNameInput = document.getElementById("buyer-fullname");
+      const phoneInput = document.getElementById("buyer-phone");
+      const otpInput = document.getElementById("buyer-otp");
+      const passwordInput = document.getElementById("buyer-password");
+      const sendOtpBtn = document.getElementById("send-otp-btn");
+      const togglePasswordBtn = document.getElementById("toggle-password-btn");
+      const submitBtn = document.getElementById("buyer-submit-btn");
+
+      // Password visibility toggle
+      if (togglePasswordBtn && passwordInput) {
+        togglePasswordBtn.addEventListener("click", () => {
+          const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+          passwordInput.setAttribute("type", type);
+          togglePasswordBtn.innerHTML = type === "password" ? '<i class="fa-regular fa-eye"></i>' : '<i class="fa-regular fa-eye-slash"></i>';
+        });
+      }
+
+      // Simulate sending OTP SMS code
+      if (sendOtpBtn && phoneInput) {
+        sendOtpBtn.addEventListener("click", () => {
+          if (!phoneInput.value.trim()) {
+            alert("Please enter your phone number first.");
+            phoneInput.focus();
+            return;
+          }
+          sendOtpBtn.disabled = true;
+          sendOtpBtn.textContent = "Sent!";
+          alert(`Demo OTP sent to ${phoneInput.value.trim()}. (Use 1234 to test)`);
+          
+          let cooldown = 30;
+          const interval = setInterval(() => {
+            cooldown--;
+            sendOtpBtn.textContent = `Resend (${cooldown}s)`;
+            if (cooldown <= 0) {
+              clearInterval(interval);
+              sendOtpBtn.disabled = false;
+              sendOtpBtn.textContent = "Send OTP";
+            }
+          }, 1000);
+        });
+      }
+
+      // Handle form submit validation and redirect
+      if (form) {
+        form.addEventListener("submit", (e) => {
+          e.preventDefault();
+
+          if (!fullNameInput.value.trim()) {
+            alert("Please enter your full name.");
+            return;
+          }
+          if (!phoneInput.value.trim()) {
+            alert("Please enter your phone number.");
+            return;
+          }
+          if (!otpInput.value.trim()) {
+            alert("Please enter the OTP code sent to your phone.");
+            return;
+          }
+          if (passwordInput.value.length < 6) {
+            alert("Password must be at least 6 characters long.");
+            return;
+          }
+
+          submitBtn.disabled = true;
+          submitBtn.textContent = "Creating Account...";
+
+          // Save active user profile session
+          const userSession = {
+            role: "buyer",
+            fullName: fullNameInput.value.trim(),
+            phone: phoneInput.value.trim(),
+            isLoggedIn: true
+          };
+          localStorage.setItem("ryft_user", JSON.stringify(userSession));
+
+          setTimeout(() => {
+            window.location.href = "index.html";
+          }, 800);
+        });
+      }
+
+      // Google Sign up simulation
+      const googleBtn = document.getElementById("google-signup-btn");
+      if (googleBtn) {
+        googleBtn.addEventListener("click", () => {
+          const userSession = {
+            role: "buyer",
+            fullName: "Google User",
+            phone: "",
+            isLoggedIn: true
+          };
+          localStorage.setItem("ryft_user", JSON.stringify(userSession));
+          window.location.href = "index.html";
+        });
+      }
+    });
+  </script>
+</body>
+</html>

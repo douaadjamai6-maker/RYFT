@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ryft — Product Reviews</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    body {
+      background-color: #f4f6f9;
+      font-family: 'Poppins', sans-serif;
+    }
+    .reviews-container {
+      max-width: 750px;
+      margin: 30px auto;
+      padding: 20px;
+    }
+    .back-link {
+      color: #2563eb;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 20px;
+    }
+    .rev-product-header {
+      background: #ffffff;
+      padding: 24px;
+      border-radius: 14px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      margin-bottom: 24px;
+      border: 1px solid #e2e8f0;
+    }
+    .review-card {
+      background: #ffffff;
+      padding: 18px;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      border: 1px solid #e2e8f0;
+    }
+    .stars {
+      color: #f59e0b;
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="logo">
+      <a href="index.html"><img src="Logo.jpg" alt="Ryft logo" class="logo-img"></a>
+    </div>
+  </nav>
+
+  <div class="reviews-container">
+    <a href="seller-dashboard.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</a>
+    
+    <div class="rev-product-header">
+      <h1 id="rev-title" style="font-size: 22px; font-weight: 700; color: #1e293b;">Product Title</h1>
+      <p id="rev-price" style="color: #2563eb; font-weight: 600; margin-top: 4px; font-size: 16px;">0 DA</p>
+    </div>
+
+    <h2 id="rev-heading-count" style="font-size: 18px; font-weight: 700; margin-bottom: 16px; color: #0f172a;">Customer Reviews</h2>
+
+    <div id="reviews-list-container"></div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const title = urlParams.get("title") || "Product";
+      const price = urlParams.get("price") || "";
+      const reviewCount = parseInt(urlParams.get("count")) || 4;
+
+      document.getElementById("rev-title").textContent = title;
+      document.getElementById("rev-price").textContent = price;
+      document.getElementById("rev-heading-count").textContent = `Customer Reviews (${reviewCount})`;
+
+      const poolReviews = [
+        { name: "Yacine M.", stars: 5, text: "Very fast shipping and high quality sound, highly recommended seller!" },
+        { name: "Lina T.", stars: 4, text: "Good product for the price. Works fine." },
+        { name: "Khaled B.", stars: 5, text: "Item is exactly as described. Brand new condition!" },
+        { name: "Sonia R.", stars: 5, text: "Excellent communication with seller and top notch product." },
+        { name: "Mehdi C.", stars: 4, text: "Works great so far! Quick response time." }
+      ];
+
+      const reviewsList = document.getElementById("reviews-list-container");
+      let htmlStr = "";
+
+      for (let i = 0; i < reviewCount; i++) {
+        const rev = poolReviews[i % poolReviews.length];
+        let starsHtml = "";
+        for (let s = 0; s < 5; s++) {
+          starsHtml += s < rev.stars ? `<i class="fa-solid fa-star"></i>` : `<i class="fa-regular fa-star"></i>`;
+        }
+
+        htmlStr += `
+          <div class="review-card">
+            <div class="stars">${starsHtml}</div>
+            <strong style="color: #1e293b; font-size: 15px;">${rev.name}</strong>
+            <p style="font-size: 14px; color: #475569; margin-top: 4px; line-height: 1.5;">${rev.text}</p>
+          </div>
+        `;
+      }
+
+      reviewsList.innerHTML = htmlStr;
+    });
+  </script>
+</body>
+</html>

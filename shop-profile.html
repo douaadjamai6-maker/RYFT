@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="shop-page-title">Ryft — Shop Profile</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Rating Dropdown Menu Styling */
+    .rating-stat-wrapper {
+      position: relative;
+      cursor: pointer;
+      display: inline-block;
+      user-select: none;
+    }
+
+    .rating-dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 125%;
+      left: 0;
+      background-color: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 8px 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      z-index: 100;
+      white-space: nowrap;
+    }
+
+    .rating-dropdown-menu.active {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .star-opt {
+      color: #d1d5db;
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: color 0.15s ease-in-out;
+    }
+
+    .star-opt:hover,
+    .star-opt.hovered,
+    .star-opt.selected {
+      color: #f59e0b;
+    }
+
+    /* Followed Button State */
+    .btn-follow.followed {
+      background-color: #e5e7eb !important;
+      color: #374151 !important;
+      border-color: #d1d5db !important;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <nav class="navbar">
+    <div class="logo">
+      <a href="index.html"><img src="Logo.jpg" alt="Ryft logo" class="logo-img"></a>
+    </div>
+    
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="categories.html">Categories</a></li>
+      <li><a href="add-listing.html">Sell</a></li>
+    </ul>
+
+    <div class="nav-icons">
+      <a href="messages.html" class="icon-circle"><i class="fa-solid fa-comment"></i></a>
+      <a href="saved-items.html" class="icon-circle"><i class="fa-solid fa-heart"></i></a>
+
+      <div class="profile-dropdown-wrapper">
+        <a href="buyer-profile.html" class="icon-circle"><i class="fa-solid fa-user"></i></a>
+        
+        <div class="profile-dropdown-menu">
+          <a href="buyer-profile.html" class="dropdown-item">
+            <i class="fa-regular fa-user"></i>
+            <span>Your Profile</span>
+          </a>
+          <a href="seller-dashboard.html" class="dropdown-item">
+            <i class="fa-solid fa-store"></i>
+            <span>Switch to Seller Profile</span>
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="signup-buyer.html" class="dropdown-item logout-item">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            <span>Log out</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Shop Profile Header Section -->
+  <section class="shop-page">
+
+    <div class="shop-header">
+      <img id="shop-avatar" src="electrologo.jpg" alt="Shop logo" class="shop-avatar">
+
+      <div class="shop-info">
+        <div class="shop-name-row">
+          <h1 id="shop-name-title" class="shop-name">Electro dz</h1>
+          <span class="trusted-badge"><i class="fa-solid fa-check"></i> Trusted Seller</span>
+        </div>
+        <p id="shop-subtext-info" class="shop-subtext">Tlemcen &nbsp;•&nbsp; Electronics & gadgets, best prices in town</p>
+
+        <div class="shop-stats">
+          <span id="shop-count-stat"><strong>12</strong> listings</span>
+          
+          <!-- Interactive Rating Trigger -->
+          <span class="rating-stat-wrapper" id="rating-stat-trigger">
+            <strong id="rating-val">4.8</strong> <i class="fa-solid fa-star"></i> rating
+            <div class="rating-dropdown-menu" id="rating-dropdown">
+              <i class="fa-solid fa-star star-opt" data-rating="1"></i>
+              <i class="fa-solid fa-star star-opt" data-rating="2"></i>
+              <i class="fa-solid fa-star star-opt" data-rating="3"></i>
+              <i class="fa-solid fa-star star-opt" data-rating="4"></i>
+              <i class="fa-solid fa-star star-opt" data-rating="5"></i>
+            </div>
+          </span>
+
+          <span><strong>238</strong> followers</span>
+        </div>
+      </div>
+
+      <div class="shop-actions">
+        <button class="btn-message-shop" id="btn-message-shop">Message Seller</button>
+        <button class="btn-follow" id="btn-follow"><i class="fa-solid fa-plus"></i> Follow</button>
+      </div>
+    </div>
+
+    <div class="chip-row" id="chip-row-container">
+      <span class="chip chip-active">All</span>
+    </div>
+
+    <div class="shop-grid" id="shop-products-grid">
+    </div>
+
+  </section>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // 1. Get exact shop name from URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const paramShop = urlParams.get("shop");
+      const rawShopName = paramShop ? decodeURIComponent(paramShop) : "electro dz";
+      const shopKey = rawShopName.toLowerCase().trim();
+
+      // 2. Comprehensive Store Profiles Data
+      const stores = {
+        "electro dz": {
+          name: "electro dz",
+          logo: "electrologo.jpg",
+          location: "Tlemcen",
+          bio: "Electronics & gadgets, best prices in town",
+          chips: ["All (12)", "Audio (5)", "Accessories (7)"],
+          items: [
+            { title: "Wireless headphones", price: "3,500 DA", image: "headphones.jpg", category: "audio" },
+            { title: "USB-C cable", price: "800 DA", image: "usb-cable.jpg", category: "accessories" },
+            { title: "Phone case", price: "1,200 DA", image: "phone-case.jpg", category: "accessories" },
+            { title: "Earbuds case", price: "1,000 DA", image: "earbuds-case.jpg", category: "accessories" },
+            { title: "Power bank", price: "2,400 DA", image: "power-bank.jpg", category: "accessories" },
+            { title: "Bluetooth speaker", price: "4,200 DA", image: "bt-speaker.jpg", category: "audio" },
+            { title: "Wired earphones", price: "600 DA", image: "wired-earphones.jpg", category: "audio" },
+            { title: "Phone charger", price: "1,500 DA", image: "phone-charger.jpg", category: "accessories" },
+            { title: "Laptop stand", price: "2,800 DA", image: "laptop-stand.jpg", category: "accessories" },
+            { title: "Smartwatch", price: "6,500 DA", image: "smartwatch.jpg", category: "accessories" },
+            { title: "Wireless mouse", price: "1,800 DA", image: "wireless-mouse.jpg", category: "audio" },
+            { title: "HDMI cable", price: "700 DA", image: "hdmi-cable.jpg", category: "accessories" }
+          ]
+        },
+        "thewoman_dz": {
+          name: "thewoman_dz",
+          logo: "clotheslogo.jpg",
+          location: "Algiers",
+          bio: "Trendy women apparel, coats, and chic everyday style",
+          chips: ["All (4)", "Coats & Jackets (2)", "Tops (2)"],
+          items: [
+            { title: "Woman fur coat", price: "15,000 DA", image: "furcoat.jpg", category: "coats & jackets" },
+            { title: "Woman long sleeves", price: "4,000 DA", image: "shirt.jpg", category: "tops" },
+            { title: "Elegance Blazer", price: "8,500 DA", image: "furcoat.jpg", category: "coats & jackets" },
+            { title: "Casual Cotton Shirt", price: "3,200 DA", image: "shirt.jpg", category: "tops" }
+          ]
+        },
+        "the_shoe_dz": {
+          name: "the_shoe_dz",
+          logo: "shoeslogo.jpg",
+          location: "Oran",
+          bio: "Original sneakers, heels, and everyday footwear",
+          chips: ["All (3)", "Sneakers (2)", "Heels (1)"],
+          items: [
+            { title: "Woman shoes", price: "5,000 DA", image: "shoes.jpg", category: "heels" },
+            { title: "Urban Running Sneakers", price: "6,200 DA", image: "shoes.jpg", category: "sneakers" },
+            { title: "Classic Leather Boots", price: "7,800 DA", image: "shoes.jpg", category: "sneakers" }
+          ]
+        },
+        "makeup_dz": {
+          name: "makeup_dz",
+          logo: "makeuplogo.jpg",
+          location: "Algiers",
+          bio: "100% authentic makeup, skincare, and beauty accessories",
+          chips: ["All (3)", "Lipstick (2)", "Palette (1)"],
+          items: [
+            { title: "Mac Lipstick", price: "8,000 DA", image: "lipstick.jpg", category: "lipstick" },
+            { title: "Matte Lip Gloss Set", price: "3,500 DA", image: "lipstick.jpg", category: "lipstick" },
+            { title: "Eyeshadow Palette", price: "6,000 DA", image: "lipstick.jpg", category: "palette" }
+          ]
+        }
+      };
+
+      const currentShop = stores[shopKey] || {
+        name: rawShopName,
+        logo: "default-store.jpg",
+        location: "Algeria",
+        bio: "Verified seller on Ryft platform",
+        chips: ["All"],
+        items: [
+          { title: "Featured Product", price: "2,500 DA", image: "headphones.jpg", category: "all" }
+        ]
+      };
+
+      // 3. Dynamic Rendering into DOM
+      const pageTitle = document.getElementById("shop-page-title");
+      const avatarImg = document.getElementById("shop-avatar");
+      const nameTitle = document.getElementById("shop-name-title");
+      const subtextInfo = document.getElementById("shop-subtext-info");
+      const countStat = document.getElementById("shop-count-stat");
+      const chipContainer = document.getElementById("chip-row-container");
+      const productsGrid = document.getElementById("shop-products-grid");
+
+      if (pageTitle) pageTitle.textContent = `Ryft — ${currentShop.name}`;
+      if (avatarImg) {
+        avatarImg.src = currentShop.logo;
+        avatarImg.alt = currentShop.name;
+      }
+      if (nameTitle) nameTitle.textContent = currentShop.name;
+      if (subtextInfo) subtextInfo.innerHTML = `${currentShop.location} &nbsp;•&nbsp; ${currentShop.bio}`;
+      if (countStat) countStat.innerHTML = `<strong>${currentShop.items.length}</strong> listings`;
+
+      if (chipContainer && currentShop.chips) {
+        chipContainer.innerHTML = currentShop.chips.map((chip, index) => `
+          <span class="chip ${index === 0 ? 'chip-active' : ''}">${chip}</span>
+        `).join("");
+      }
+
+      function renderItems(itemsToRender) {
+        if (!productsGrid) return;
+        productsGrid.innerHTML = itemsToRender.map(item => `
+          <a href="product-detail.html?title=${encodeURIComponent(item.title)}&price=${encodeURIComponent(item.price)}&image=${encodeURIComponent(item.image)}&shop=${encodeURIComponent(currentShop.name)}" class="shop-card">
+            <div class="shop-card-img"><img src="${item.image}" alt="${item.title}"></div>
+            <p class="shop-card-title">${item.title}</p>
+            <p class="shop-card-price">${item.price}</p>
+          </a>
+        `).join("");
+      }
+
+      // Initial grid render
+      if (currentShop.items) {
+        renderItems(currentShop.items);
+      }
+
+      // 4. Chip Filter Logic
+      if (chipContainer) {
+        chipContainer.addEventListener("click", (e) => {
+          const clickedChip = e.target.closest(".chip");
+          if (!clickedChip) return;
+
+          // Toggle chip-active class
+          const allChips = chipContainer.querySelectorAll(".chip");
+          allChips.forEach(c => c.classList.remove("chip-active"));
+          clickedChip.classList.add("chip-active");
+
+          // Extract category from chip text (e.g., "Audio (5)" -> "audio")
+          const rawCategory = clickedChip.textContent.split("(")[0].trim().toLowerCase();
+
+          if (rawCategory === "all") {
+            renderItems(currentShop.items);
+          } else {
+            const filteredItems = currentShop.items.filter(item => {
+              const itemCat = (item.category || "").toLowerCase();
+              return itemCat.includes(rawCategory) || rawCategory.includes(itemCat);
+            });
+            renderItems(filteredItems);
+          }
+        });
+      }
+
+      // Dynamic Route to Specific Seller Chat
+      const msgBtn = document.getElementById("btn-message-shop");
+      if (msgBtn) {
+        msgBtn.onclick = () => {
+          window.location.href = `conversation.html?seller=${encodeURIComponent(currentShop.name)}&shop=${encodeURIComponent(currentShop.name)}`;
+        };
+      }
+
+      // Follow / Followed Toggle Logic
+      const followBtn = document.getElementById("btn-follow");
+      if (followBtn) {
+        followBtn.addEventListener("click", () => {
+          const isFollowed = followBtn.classList.contains("followed");
+          if (isFollowed) {
+            followBtn.classList.remove("followed");
+            followBtn.innerHTML = `<i class="fa-solid fa-plus"></i> Follow`;
+          } else {
+            followBtn.classList.add("followed");
+            followBtn.innerHTML = `Followed`;
+          }
+        });
+      }
+
+      // Rating Dropdown Logic
+      const ratingTrigger = document.getElementById("rating-stat-trigger");
+      const ratingDropdown = document.getElementById("rating-dropdown");
+      const ratingVal = document.getElementById("rating-val");
+      const stars = ratingDropdown ? ratingDropdown.querySelectorAll(".star-opt") : [];
+
+      if (ratingTrigger && ratingDropdown) {
+        ratingTrigger.addEventListener("click", (e) => {
+          e.stopPropagation();
+          ratingDropdown.classList.toggle("active");
+        });
+
+        document.addEventListener("click", (e) => {
+          if (!ratingTrigger.contains(e.target)) {
+            ratingDropdown.classList.remove("active");
+          }
+        });
+
+        stars.forEach((star) => {
+          star.addEventListener("mouseenter", () => {
+            const val = parseInt(star.getAttribute("data-rating"));
+            stars.forEach((s, idx) => {
+              if (idx < val) s.classList.add("hovered");
+              else s.classList.remove("hovered");
+            });
+          });
+
+          star.addEventListener("mouseleave", () => {
+            stars.forEach((s) => s.classList.remove("hovered"));
+          });
+
+          star.addEventListener("click", (e) => {
+            e.stopPropagation();
+            const chosenRating = star.getAttribute("data-rating");
+            if (ratingVal) ratingVal.textContent = parseFloat(chosenRating).toFixed(1);
+            
+            stars.forEach((s, idx) => {
+              if (idx < parseInt(chosenRating)) s.classList.add("selected");
+              else s.classList.remove("selected");
+            });
+
+            ratingDropdown.classList.remove("active");
+          });
+        });
+      }
+    });
+  </script>
+</body>
+</html>

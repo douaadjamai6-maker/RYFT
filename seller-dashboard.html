@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ryft — Seller Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    /* Clean Circular Avatar & Camera Overlay Fix */
+    .dash-avatar-wrapper {
+      position: relative;
+      width: 90px;
+      height: 90px;
+      margin: 0 auto 12px;
+      border-radius: 50%;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .dash-avatar-wrapper .dash-avatar {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+      display: block;
+    }
+    .avatar-overlay {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.55);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      font-size: 18px;
+    }
+    .dash-avatar-wrapper:hover .avatar-overlay {
+      opacity: 1;
+    }
+
+    /* Interactive Location Dropdown */
+    .location-picker-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+    .dash-shop-location {
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #e5e7eb;
+      font-size: 14px;
+      padding: 4px 8px;
+      border-radius: 6px;
+      transition: background 0.2s;
+    }
+    .dash-shop-location:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+    .wilaya-modal {
+      display: none;
+      position: absolute;
+      top: 110%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #ffffff;
+      color: #1f2937;
+      border-radius: 10px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      padding: 12px;
+      width: 220px;
+      z-index: 100;
+    }
+    .wilaya-modal.active {
+      display: block;
+    }
+    .wilaya-modal input {
+      width: 100%;
+      padding: 6px 10px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      font-size: 13px;
+      margin-bottom: 8px;
+      box-sizing: border-box;
+    }
+    .wilaya-modal-list {
+      max-height: 150px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .wilaya-modal-btn {
+      background: none;
+      border: none;
+      text-align: left;
+      padding: 6px 8px;
+      font-size: 13px;
+      color: #374151;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .wilaya-modal-btn:hover {
+      background: #f3f4f6;
+    }
+
+    /* Editable Description Section */
+    .dash-description-box {
+      margin: 12px 0 16px;
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      text-align: center;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .dash-desc-text {
+      font-size: 13px;
+      color: #f3f4f6;
+      line-height: 1.4;
+      display: block;
+      margin-bottom: 6px;
+    }
+    .btn-edit-desc {
+      background: none;
+      border: none;
+      color: #93c5fd;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .btn-edit-desc:hover {
+      text-decoration: underline;
+    }
+    .desc-textarea {
+      width: 100%;
+      background: #ffffff;
+      color: #1f2937;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      padding: 6px;
+      font-size: 13px;
+      resize: vertical;
+      box-sizing: border-box;
+      display: none;
+    }
+
+    /* Interactive Stats & Links */
+    .stat-badge-link {
+      cursor: pointer;
+      transition: opacity 0.2s ease;
+    }
+    .stat-badge-link:hover {
+      opacity: 0.75;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <nav class="navbar">
+    <div class="logo">
+      <a href="index.html"><img src="Logo.jpg" alt="Ryft logo" class="logo-img"></a>
+    </div>
+    
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="categories.html">Categories</a></li>
+      <li><a href="add-listing.html">Sell</a></li>
+    </ul>
+
+    <div class="nav-icons">
+      <a href="messages.html" class="icon-circle"><i class="fa-solid fa-comment"></i></a>
+      <a href="saved-items.html" class="icon-circle"><i class="fa-solid fa-heart"></i></a>
+
+      <div class="profile-dropdown-wrapper">
+        <a href="seller-dashboard.html" class="icon-circle active-icon"><i class="fa-solid fa-user"></i></a>
+        
+        <div class="profile-dropdown-menu">
+          <a href="buyer-profile.html" class="dropdown-item">
+            <i class="fa-regular fa-user"></i>
+            <span>Switch to Buyer Profile</span>
+          </a>
+          <a href="seller-dashboard.html" class="dropdown-item">
+            <i class="fa-solid fa-store"></i>
+            <span>Your Seller Dashboard</span>
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="signup-buyer.html" class="dropdown-item logout-item">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            <span>Log out</span>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </nav>
+
+  <!-- Dashboard Container -->
+  <div class="dashboard-container">
+    
+    <!-- Left Sidebar Profile & Stats -->
+    <aside class="dashboard-sidebar">
+      
+      <!-- Profile Card -->
+      <div class="seller-card-dash">
+        <div class="dash-avatar-wrapper" id="avatar-container" title="Click to change logo">
+          <img src="electrologo.jpg" alt="Electro dz" class="dash-avatar" id="dash-avatar-img">
+          <div class="avatar-overlay"><i class="fa-solid fa-camera"></i></div>
+          <input type="file" id="avatar-file-input" accept="image/*" style="display: none;">
+        </div>
+
+        <h2 class="dash-shop-name" id="dash-shop-name">Electro dz</h2>
+
+        <div class="location-picker-wrapper">
+          <p class="dash-shop-location" id="location-trigger">
+            <i class="fa-solid fa-location-dot"></i>
+            <span id="dash-location-text">Tlemcen</span>
+            <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i>
+          </p>
+          <div class="wilaya-modal" id="wilaya-modal">
+            <input type="text" id="wilaya-search-input" placeholder="Search Wilaya...">
+            <div class="wilaya-modal-list" id="wilaya-modal-list"></div>
+          </div>
+        </div>
+
+        <div class="trusted-badge-dash">Trusted Seller ✓</div>
+
+        <!-- Editable Shop Description -->
+        <div class="dash-description-box">
+          <span class="dash-desc-text" id="dash-desc-display">We offer high quality electronic gear, gaming headsets, and audio accessories in Algeria!</span>
+          <textarea id="dash-desc-input" class="desc-textarea" rows="3"></textarea>
+          <button class="btn-edit-desc" id="toggle-edit-desc"><i class="fa-solid fa-pen"></i> Edit Description</button>
+        </div>
+      </div>
+
+      <!-- Stats Row 1 -->
+      <div class="dash-stat-row">
+        <span>Listing</span>
+        <span class="stat-num" id="stat-listings-count">6</span>
+      </div>
+
+      <!-- Stats Row 2 -->
+      <div class="dash-stat-row">
+        <span>Followers</span>
+        <span class="stat-num" id="stat-followers-count">238</span>
+      </div>
+
+      <!-- Stats Row 3 -->
+      <div class="dash-stat-row">
+        <span>Messages</span>
+        <span class="stat-num" id="stat-messages-count">39</span>
+      </div>
+
+      <a href="add-listing.html" class="add-listing-btn">+ Add New Listing</a>
+    </aside>
+
+    <!-- Right Listings Section -->
+    <main class="dashboard-main">
+      <h1 class="dash-title">Your listings</h1>
+
+      <div class="seller-listings-grid" id="seller-listings-grid">
+        
+        <!-- Card 1 -->
+        <div class="dash-item-card" data-id="1" data-title="Wireless headphones" data-price="3500 DA" data-img="headphones.jpg">
+          <div class="dash-item-img" style="background-image: url('headphones.jpg'); background-size: cover; background-position: center;"></div>
+          <div class="dash-item-info">
+            <h3 class="dash-item-title">Wireless headphones</h3>
+            <span class="dash-item-price">3500 DA</span>
+            <div class="dash-item-stats">
+              <div class="stat-badge-link btn-view-reviews"><strong>12</strong> Reviews</div>
+              <div class="stat-badge-link btn-view-messages"><strong>7</strong> Messages</div>
+            </div>
+          </div>
+          <div class="dash-item-actions">
+            <button class="btn-edit">Edit</button>
+            <button class="btn-delete">Delete</button>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="dash-item-card" data-id="2" data-title="USB-C cable" data-price="800 DA" data-img="usb-cable.jpg">
+          <div class="dash-item-img" style="background-size: cover; background-position: center;"></div>
+          <div class="dash-item-info">
+            <h3 class="dash-item-title">USB-C cable</h3>
+            <span class="dash-item-price">800 DA</span>
+            <div class="dash-item-stats">
+              <div class="stat-badge-link btn-view-reviews"><strong>22</strong> Reviews</div>
+              <div class="stat-badge-link btn-view-messages"><strong>10</strong> Messages</div>
+            </div>
+          </div>
+          <div class="dash-item-actions">
+            <button class="btn-edit">Edit</button>
+            <button class="btn-delete">Delete</button>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="dash-item-card" data-id="3" data-title="Phone case" data-price="1200 DA" data-img="phone-case.jpg">
+          <div class="dash-item-img" style="background-size: cover; background-position: center;"></div>
+          <div class="dash-item-info">
+            <h3 class="dash-item-title">Phone case</h3>
+            <span class="dash-item-price">1200 DA</span>
+            <div class="dash-item-stats">
+              <div class="stat-badge-link btn-view-reviews"><strong>11</strong> Reviews</div>
+              <div class="stat-badge-link btn-view-messages"><strong>8</strong> Messages</div>
+            </div>
+          </div>
+          <div class="dash-item-actions">
+            <button class="btn-edit">Edit</button>
+            <button class="btn-delete">Delete</button>
+          </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="dash-item-card" data-id="4" data-title="Earbuds case" data-price="1000 DA" data-img="earbuds.jpg">
+          <div class="dash-item-img" style="background-size: cover; background-position: center;"></div>
+          <div class="dash-item-info">
+            <h3 class="dash-item-title">Earbuds case</h3>
+            <span class="dash-item-price">1000 DA</span>
+            <div class="dash-item-stats">
+              <div class="stat-badge-link btn-view-reviews"><strong>24</strong> Reviews</div>
+              <div class="stat-badge-link btn-view-messages"><strong>3</strong> Messages</div>
+            </div>
+          </div>
+          <div class="dash-item-actions">
+            <button class="btn-edit">Edit</button>
+            <button class="btn-delete">Delete</button>
+          </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="dash-item-card" data-id="5" data-title="Power bank" data-price="2400 DA" data-img="powerbank.jpg">
+          <div class="dash-item-img" style="background-size: cover; background-position: center;"></div>
+          <div class="dash-item-info">
+            <h3 class="dash-item-title">Power bank</h3>
+            <span class="dash-item-price">2400 DA</span>
+            <div class="dash-item-stats">
+              <div class="stat-badge-link btn-view-reviews"><strong>8</strong> Reviews</div>
+              <div class="stat-badge-link btn-view-messages"><strong>2</strong> Messages</div>
+            </div>
+          </div>
+          <div class="dash-item-actions">
+            <button class="btn-edit">Edit</button>
+            <button class="btn-delete">Delete</button>
+          </div>
+        </div>
+
+        <!-- Card 6 -->
+        <div class="dash-item-card" data-id="6" data-title="Bluetooth speaker" data-price="4200 DA" data-img="speaker.jpg">
+          <div class="dash-item-img" style="background-size: cover; background-position: center;"></div>
+          <div class="dash-item-info">
+            <h3 class="dash-item-title">Bluetooth speaker</h3>
+            <span class="dash-item-price">4200 DA</span>
+            <div class="dash-item-stats">
+              <div class="stat-badge-link btn-view-reviews"><strong>17</strong> Reviews</div>
+              <div class="stat-badge-link btn-view-messages"><strong>9</strong> Messages</div>
+            </div>
+          </div>
+          <div class="dash-item-actions">
+            <button class="btn-edit">Edit</button>
+            <button class="btn-delete">Delete</button>
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const wilayas = [
+        "01 - Adrar", "02 - Chlef", "03 - Laghouat", "04 - Oum El Bouaghi", "05 - Batna", 
+        "06 - Béjaïa", "07 - Biskra", "08 - Béchar", "09 - Blida", "10 - Bouira", 
+        "11 - Tamanrasset", "12 - Tébessa", "13 - Tlemcen", "14 - Tiaret", "15 - Tizi Ouzou", 
+        "16 - Algiers", "17 - Djelfa", "18 - Jijel", "19 - Sétif", "20 - Saïda", 
+        "21 - Skikda", "22 - Sidi Bel Abbès", "23 - Annaba", "24 - Guelma", "25 - Constantine", 
+        "26 - Médéa", "27 - Mostaganem", "28 - M'Sila", "29 - Mascara", "30 - Ouargla", 
+        "31 - Oran", "32 - El Bayadh", "33 - Illizi", "34 - Bordj Bou Arréridj", "35 - Boumerdès", 
+        "36 - El Tarf", "37 - Tindouf", "38 - Tissemsilt", "39 - El Oued", "40 - Khenchela", 
+        "41 - Souk Ahras", "42 - Tipaza", "43 - Mila", "44 - Aïn Defla", "45 - Naâma", 
+        "46 - Aïn Témouchent", "47 - Ghardaïa", "48 - Relizane", "49 - El M'Ghair", "50 - El Meniaa", 
+        "51 - Ouled Djellal", "52 - Bordj Baji Mokhtar", "53 - Béni Abbès", "54 - Timimoun", "55 - Touggourt", 
+        "56 - Djanet", "57 - In Salah", "58 - In Guezzam"
+      ];
+
+      // Load persistent seller data from localStorage
+      let storeData = JSON.parse(localStorage.getItem("ryft_store_data")) || {
+        location: "Tlemcen",
+        description: "We offer high quality electronic gear, gaming headsets, and audio accessories in Algeria!",
+        avatarUrl: "electrologo.jpg"
+      };
+
+      const dashAvatarImg = document.getElementById("dash-avatar-img");
+      const locationText = document.getElementById("dash-location-text");
+      const descDisplay = document.getElementById("dash-desc-display");
+
+      if (dashAvatarImg && storeData.avatarUrl) dashAvatarImg.src = storeData.avatarUrl;
+      if (locationText && storeData.location) locationText.textContent = storeData.location;
+      if (descDisplay && storeData.description) descDisplay.textContent = storeData.description;
+
+      // Avatar Image Upload Handler
+      const avatarContainer = document.getElementById("avatar-container");
+      const avatarFileInput = document.getElementById("avatar-file-input");
+
+      if (avatarContainer && avatarFileInput) {
+        avatarContainer.addEventListener("click", () => avatarFileInput.click());
+
+        avatarFileInput.addEventListener("change", (e) => {
+          const file = e.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = (evt) => {
+              dashAvatarImg.src = evt.target.result;
+              storeData.avatarUrl = evt.target.result;
+              localStorage.setItem("ryft_store_data", JSON.stringify(storeData));
+            };
+            reader.readAsDataURL(file);
+          }
+        });
+      }
+
+      // Location Wilaya Dropdown & Search
+      const locationTrigger = document.getElementById("location-trigger");
+      const wilayaModal = document.getElementById("wilaya-modal");
+      const wilayaSearchInput = document.getElementById("wilaya-search-input");
+      const wilayaModalList = document.getElementById("wilaya-modal-list");
+
+      if (wilayaModalList) {
+        let htmlStr = "";
+        wilayas.forEach(w => {
+          const cleanName = w.includes("-") ? w.split("-")[1].trim() : w;
+          htmlStr += `<button type="button" class="wilaya-modal-btn" data-loc="${cleanName}">${w}</button>`;
+        });
+        wilayaModalList.innerHTML = htmlStr;
+      }
+
+      if (locationTrigger && wilayaModal) {
+        locationTrigger.addEventListener("click", (e) => {
+          e.stopPropagation();
+          wilayaModal.classList.toggle("active");
+        });
+
+        document.addEventListener("click", () => wilayaModal.classList.remove("active"));
+        wilayaModal.addEventListener("click", (e) => e.stopPropagation());
+
+        if (wilayaSearchInput) {
+          wilayaSearchInput.addEventListener("input", (e) => {
+            const term = e.target.value.toLowerCase().trim();
+            const btns = wilayaModalList.querySelectorAll(".wilaya-modal-btn");
+            btns.forEach(b => {
+              b.style.display = b.textContent.toLowerCase().includes(term) ? "block" : "none";
+            });
+          });
+        }
+
+        if (wilayaModalList) {
+          wilayaModalList.addEventListener("click", (e) => {
+            const btn = e.target.closest(".wilaya-modal-btn");
+            if (!btn) return;
+            const newLoc = btn.getAttribute("data-loc");
+            locationText.textContent = newLoc;
+            storeData.location = newLoc;
+            localStorage.setItem("ryft_store_data", JSON.stringify(storeData));
+            wilayaModal.classList.remove("active");
+          });
+        }
+      }
+
+      // Editable Description Handler
+      const toggleDescBtn = document.getElementById("toggle-edit-desc");
+      const descInput = document.getElementById("dash-desc-input");
+
+      if (toggleDescBtn && descInput && descDisplay) {
+        toggleDescBtn.addEventListener("click", () => {
+          if (descInput.style.display === "block") {
+            const updatedText = descInput.value.trim() || descDisplay.textContent;
+            descDisplay.textContent = updatedText;
+            storeData.description = updatedText;
+            localStorage.setItem("ryft_store_data", JSON.stringify(storeData));
+
+            descInput.style.display = "none";
+            descDisplay.style.display = "block";
+            toggleDescBtn.innerHTML = '<i class="fa-solid fa-pen"></i> Edit Description';
+          } else {
+            descInput.value = descDisplay.textContent;
+            descDisplay.style.display = "none";
+            descInput.style.display = "block";
+            descInput.focus();
+            toggleDescBtn.innerHTML = '<i class="fa-solid fa-check"></i> Save Description';
+          }
+        });
+      }
+
+      // Dynamic Stats Calculation & Event Delegations for Item Actions
+      const listingsGrid = document.getElementById("seller-listings-grid");
+      const statListingsCount = document.getElementById("stat-listings-count");
+      const statMessagesCount = document.getElementById("stat-messages-count");
+
+      const updateStats = () => {
+        const cards = document.querySelectorAll(".dash-item-card");
+        if (statListingsCount) statListingsCount.textContent = cards.length;
+
+        let totalMessages = 0;
+        cards.forEach(card => {
+          const msgBadge = card.querySelector(".btn-view-messages strong");
+          if (msgBadge) totalMessages += parseInt(msgBadge.textContent) || 0;
+        });
+        if (statMessagesCount) statMessagesCount.textContent = totalMessages;
+      };
+
+      if (listingsGrid) {
+        listingsGrid.addEventListener("click", (e) => {
+          const card = e.target.closest(".dash-item-card");
+          if (!card) return;
+
+          const title = card.getAttribute("data-title") || "";
+          const price = card.getAttribute("data-price") || "";
+          
+          const revCount = card.querySelector(".btn-view-reviews strong")?.textContent || "0";
+          const msgCount = card.querySelector(".btn-view-messages strong")?.textContent || "0";
+
+          // Handle Edit Button
+          if (e.target.classList.contains("btn-edit")) {
+            window.location.href = `edit-listing.html?title=${encodeURIComponent(title)}&price=${encodeURIComponent(price)}`;
+            return;
+          }
+
+          // Handle Delete Button
+          if (e.target.classList.contains("btn-delete")) {
+            if (confirm(`Are you sure you want to delete "${title}"?`)) {
+              card.remove();
+              updateStats();
+            }
+            return;
+          }
+
+          // Handle View Messages Link
+          if (e.target.closest(".btn-view-messages")) {
+            window.location.href = `product-messages.html?title=${encodeURIComponent(title)}&count=${msgCount}`;
+            return;
+          }
+
+          // Handle View Reviews Link
+          if (e.target.closest(".btn-view-reviews")) {
+            window.location.href = `product-reviews.html?title=${encodeURIComponent(title)}&price=${encodeURIComponent(price)}&count=${revCount}`;
+            return;
+          }
+        });
+      }
+
+      updateStats();
+    });
+  </script>
+</body>
+</html>

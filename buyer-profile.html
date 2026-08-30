@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ryft — Buyer Profile</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <nav class="navbar">
+    <div class="logo">
+      <img src="Logo.jpg" alt="Ryft logo" class="logo-img">
+    </div>
+
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="categories.html">Categories</a></li>
+      <li><a href="add-listing.html">Sell</a></li>
+    </ul>
+
+    <div class="nav-icons">
+      <a href="messages.html" class="icon-circle"><i class="fa-solid fa-comment"></i></a>
+      <a href="saved-items.html" class="icon-circle"><i class="fa-solid fa-heart"></i></a>
+      
+      <!-- Profile Icon with Hover Dropdown -->
+      <div class="profile-dropdown-wrapper">
+        <a href="buyer-profile.html" class="icon-circle active-icon"><i class="fa-solid fa-user"></i></a>
+        
+        <!-- Dropdown Menu -->
+        <div class="profile-dropdown-menu">
+          <a href="buyer-profile.html" class="dropdown-item">
+            <i class="fa-regular fa-user"></i>
+            <span>Your Profile</span>
+          </a>
+          <a href="seller-dashboard.html" class="dropdown-item">
+            <i class="fa-solid fa-store"></i>
+            <span>Switch to Seller Profile</span>
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="signup-buyer.html" class="dropdown-item logout-item">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            <span>Log out</span>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </nav>
+
+  <!-- Buyer Profile Container -->
+  <div class="dashboard-container">
+    
+    <!-- Left Sidebar Profile & Nav -->
+    <aside class="dashboard-sidebar">
+      
+      <!-- Profile Card -->
+      <div class="buyer-card-dash">
+        <div class="buyer-avatar"></div>
+        <h2 class="dash-shop-name">Yacine</h2>
+        <p class="dash-shop-location">Tlemcen</p>
+        <button class="btn-edit-profile">Edit profile</button>
+      </div>
+
+      <!-- Quick Stats -->
+      <div class="dash-stat-row">
+        <span>Saved items</span>
+        <span class="stat-num">12</span>
+      </div>
+
+      <div class="dash-stat-row">
+        <span>Following</span>
+        <span class="stat-num">38</span>
+      </div>
+
+      <div class="dash-stat-row">
+        <span>Messages</span>
+        <span class="stat-num">17</span>
+      </div>
+
+      <!-- Navigation Tabs Sidebar -->
+      <div class="buyer-nav-box">
+        <a href="saved-items.html" class="buyer-tab"><i class="fa-regular fa-heart"></i> Saved Items</a>
+        <a href="#" class="buyer-tab"><i class="fa-solid fa-store"></i> Shops I Follow</a>
+        <a href="messages.html" class="buyer-tab"><i class="fa-regular fa-comment"></i> Messages</a>
+        <a href="#" class="buyer-tab active-tab"><i class="fa-solid fa-gear"></i> Account Settings</a>
+      </div>
+
+    </aside>
+
+    <!-- Right Main Content -->
+    <main class="dashboard-main">
+
+      <!-- Account Settings Block -->
+      <div class="account-settings-block">
+        <h2 class="settings-title">Account Settings</h2>
+        
+        <div class="settings-grid">
+          <div class="field-group">
+            <label>Full name</label>
+            <input type="text" value="Yacine ouchbah" readonly class="settings-input">
+          </div>
+
+          <div class="field-group">
+            <label>Phone number</label>
+            <input type="text" value="05XX XX XX XX" readonly class="settings-input">
+          </div>
+
+          <div class="field-group">
+            <label>Location</label>
+            <input type="text" value="Tlemcen" readonly class="settings-input">
+          </div>
+
+          <div class="field-group">
+            <label>Password</label>
+            <input type="password" value="********" readonly class="settings-input">
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+  </div>
+
+</body>
+</html>
