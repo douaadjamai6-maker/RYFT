@@ -48,6 +48,17 @@
       font-size: 13px;
       margin-bottom: 6px;
     }
+    .reviewer-link {
+      color: #1e293b;
+      font-size: 15px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+    .reviewer-link:hover {
+      color: #2563eb;
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
@@ -83,11 +94,11 @@
       document.getElementById("rev-heading-count").textContent = `Customer Reviews (${reviewCount})`;
 
       const poolReviews = [
-        { name: "Yacine M.", stars: 5, text: "Very fast shipping and high quality sound, highly recommended seller!" },
-        { name: "Lina T.", stars: 4, text: "Good product for the price. Works fine." },
-        { name: "Khaled B.", stars: 5, text: "Item is exactly as described. Brand new condition!" },
-        { name: "Sonia R.", stars: 5, text: "Excellent communication with seller and top notch product." },
-        { name: "Mehdi C.", stars: 4, text: "Works great so far! Quick response time." }
+        { name: "Yassine Amrani", handle: "yassine_dz", stars: 5, text: "Very fast shipping and high quality sound, highly recommended seller!" },
+        { name: "Lina T.", handle: "lina_t", stars: 4, text: "Good product for the price. Works fine." },
+        { name: "Khaled B.", handle: "khaled_b", stars: 5, text: "Item is exactly as described. Brand new condition!" },
+        { name: "Sonia R.", handle: "sonia_r", stars: 5, text: "Excellent communication with seller and top notch product." },
+        { name: "Mehdi C.", handle: "mehdi_c", stars: 4, text: "Works great so far! Quick response time." }
       ];
 
       const reviewsList = document.getElementById("reviews-list-container");
@@ -103,7 +114,7 @@
         htmlStr += `
           <div class="review-card">
             <div class="stars">${starsHtml}</div>
-            <strong style="color: #1e293b; font-size: 15px;">${rev.name}</strong>
+            <a href="seller-view-buyer-profile.html?user=${encodeURIComponent(rev.handle)}" class="reviewer-link">${rev.name}</a>
             <p style="font-size: 14px; color: #475569; margin-top: 4px; line-height: 1.5;">${rev.text}</p>
           </div>
         `;

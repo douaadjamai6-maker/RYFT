@@ -9,11 +9,13 @@
 </head>
 <body>
 
-  <!-- Conversation Header -->
+  <!-- Conversation Header linked to buyer profile -->
   <header class="convo-header">
     <a href="messages.html" class="back-arrow"><i class="fa-solid fa-arrow-left"></i></a>
-    <img id="convo-header-avatar" src="electrologo.jpg" alt="Shop logo" class="convo-avatar">
-    <span id="convo-header-name" class="convo-name">Electro dz</span>
+    <a href="#" id="convo-profile-link" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: inherit;">
+      <img id="convo-header-avatar" src="electrologo.jpg" alt="Shop logo" class="convo-avatar">
+      <span id="convo-header-name" class="convo-name">Electro dz</span>
+    </a>
   </header>
 
   <!-- Thread / Chat Area -->
@@ -54,27 +56,26 @@
     </button>
   </footer>
 
-  <script src="conversation.js"></script>
-
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      // 1. Get seller from URL parameters
+      // 1. Get user/seller from URL parameters
       const urlParams = new URLSearchParams(window.location.search);
-      const sellerParam = urlParams.get("seller") || urlParams.get("shop");
-      const rawSellerName = sellerParam ? decodeURIComponent(sellerParam) : "electro dz";
-      const sellerKey = rawSellerName.toLowerCase().trim();
+      const userParam = urlParams.get("user") || urlParams.get("seller") || urlParams.get("shop");
+      const rawUserName = userParam ? decodeURIComponent(userParam) : "electro dz";
+      const userKey = rawUserName.toLowerCase().trim().replace(/^@/, '');
 
-      // 2. Map store details
+      // 2. Map store/user details
       const stores = {
         "electro dz": { name: "Electro dz", logo: "electrologo.jpg" },
         "thewoman_dz": { name: "thewoman_dz", logo: "clotheslogo.jpg" },
         "the_shoe_dz": { name: "the_shoe_dz", logo: "shoeslogo.jpg" },
-        "makeup_dz": { name: "makeup_dz", logo: "makeuplogo.jpg" }
+        "makeup_dz": { name: "makeup_dz", logo: "makeuplogo.jpg" },
+        "yassine_dz": { name: "Yassine Amrani", logo: "default-avatar.png" }
       };
 
-      const currentStore = stores[sellerKey] || {
-        name: rawSellerName,
-        logo: "default-store.jpg"
+      const currentUser = stores[userKey] || {
+        name: rawUserName,
+        logo: "default-avatar.png"
       };
 
       // 3. Update DOM Elements
@@ -82,16 +83,20 @@
       const headerName = document.getElementById("convo-header-name");
       const headerAvatar = document.getElementById("convo-header-avatar");
       const sellerAvatar = document.getElementById("convo-seller-avatar");
+      const profileLink = document.getElementById("convo-profile-link");
 
-      if (pageTitle) pageTitle.textContent = `RYFT — ${currentStore.name}`;
-      if (headerName) headerName.textContent = currentStore.name;
+      if (pageTitle) pageTitle.textContent = `RYFT — ${currentUser.name}`;
+      if (headerName) headerName.textContent = currentUser.name;
       if (headerAvatar) {
-        headerAvatar.src = currentStore.logo;
-        headerAvatar.alt = currentStore.name;
+        headerAvatar.src = currentUser.logo;
+        headerAvatar.alt = currentUser.name;
       }
       if (sellerAvatar) {
-        sellerAvatar.src = currentStore.logo;
-        sellerAvatar.alt = currentStore.name;
+        sellerAvatar.src = currentUser.logo;
+        sellerAvatar.alt = currentUser.name;
+      }
+      if (profileLink) {
+        profileLink.href = `seller-view-buyer-profile.html?user=${encodeURIComponent(userKey)}`;
       }
     });
   </script>

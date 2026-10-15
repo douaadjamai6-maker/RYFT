@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="style.css">
 
   <style>
-    /* Styling adjustments for dynamic upload slot previews & dropdowns */
+    /* Photo upload slot previews & dropdowns */
     .photo-upload-section label {
       position: relative;
       cursor: pointer;
@@ -49,6 +49,62 @@
       appearance: auto;
       background-color: #ffffff;
       cursor: pointer;
+    }
+
+    /* RYFTBOT Hero Banner Styling */
+    .ryftbot-banner {
+      background: linear-gradient(135deg, #114B5F, #00BCD4);
+      color: #ffffff;
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      box-shadow: 0 4px 15px rgba(37, 99, 235, 0.2);
+    }
+    .ryftbot-info {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .ryftbot-icon-badge {
+      width: 48px;
+      height: 48px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+    .ryftbot-text h3 {
+      font-size: 16px;
+      font-weight: 700;
+      margin: 0 0 2px 0;
+    }
+    .ryftbot-text p {
+      font-size: 13px;
+      margin: 0;
+      opacity: 0.9;
+    }
+    .btn-use-ryftbot {
+      background: #ffffff;
+      color: #00BCD4;
+      font-weight: 700;
+      font-size: 13px;
+      padding: 10px 18px;
+      border-radius: 8px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+      transition: background 0.2s ease;
+    }
+    .btn-use-ryftbot:hover {
+      background: #f1f5f9;
     }
   </style>
 </head>
@@ -93,6 +149,22 @@
 
   <main class="add-listing-container">
     <h1 class="page-title">Add New Listing</h1>
+
+    <!-- RYFTBOT AI Banner Header -->
+    <div class="ryftbot-banner">
+      <div class="ryftbot-info">
+        <div class="ryftbot-icon-badge">
+          <i class="fa-solid fa-robot"></i>
+        </div>
+        <div class="ryftbot-text">
+          <h3>Hate typing details? Use RYFTBOT</h3>
+          <p>Drop a screenshot of your Instagram post. The AI writes the title & description automatically!</p>
+        </div>
+      </div>
+      <a href="ryftbot.html" class="btn-use-ryftbot">
+        <i class="fa-solid fa-wand-magic-sparkles"></i> Try RYFTBOT
+      </a>
+    </div>
 
     <form class="add-listing-form" id="listing-form">
       
@@ -160,9 +232,18 @@
       const fileInputs = document.querySelectorAll(".photo-file-input");
       const draftBtn = document.getElementById("btn-save-draft");
 
+      // Auto-fill from RYFTBOT draft if directed here
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get("autofill") === "true") {
+        const botData = JSON.parse(localStorage.getItem("ryftbot_pending_draft") || "{}");
+        if (botData.title) document.getElementById("title").value = botData.title;
+        if (botData.price) document.getElementById("price").value = botData.price;
+        if (botData.category) document.getElementById("category").value = botData.category;
+        if (botData.description) document.getElementById("description").value = botData.description;
+      }
+
       const uploadedImages = [];
 
-      // 1. Image Upload & Instant Preview Handler
       fileInputs.forEach((input, index) => {
         const label = input.parentElement;
 
@@ -175,18 +256,15 @@
             const base64Image = evt.target.result;
             uploadedImages[index] = base64Image;
 
-            // Remove existing preview if present
             const oldImg = label.querySelector(".preview-img");
             const oldBtn = label.querySelector(".remove-btn");
             if (oldImg) oldImg.remove();
             if (oldBtn) oldBtn.remove();
 
-            // Create image element preview
             const img = document.createElement("img");
             img.src = base64Image;
             img.className = "preview-img";
 
-            // Create remove button overlay
             const removeBtn = document.createElement("button");
             removeBtn.type = "button";
             removeBtn.className = "remove-btn";
@@ -209,7 +287,6 @@
         });
       });
 
-      // Helper function to extract and construct item payload
       function getFormData() {
         return {
           id: Date.now(),
@@ -225,18 +302,14 @@
         };
       }
 
-      // 2. Publish Listing Form Submission
       form.addEventListener("submit", (e) => {
         e.preventDefault();
-
         const newListing = getFormData();
         
-        // Fallback default image if none uploaded
         if (newListing.images.length === 0) {
           newListing.images.push("headphones.jpg"); 
         }
 
-        // Save into localStorage listings array
         const existingListings = JSON.parse(localStorage.getItem("ryft_seller_listings") || "[]");
         existingListings.unshift(newListing);
         localStorage.setItem("ryft_seller_listings", JSON.stringify(existingListings));
@@ -245,7 +318,6 @@
         window.location.href = "seller-dashboard.html";
       });
 
-      // 3. Save as Draft Handler
       draftBtn.addEventListener("click", () => {
         const draftData = getFormData();
         if (!draftData.title) {
