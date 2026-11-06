@@ -20,29 +20,7 @@
 
   <!-- Thread / Chat Area -->
   <main class="convo-thread">
-
-    <!-- Buyer Message (Right side) -->
-    <div class="convo-row row-right">
-      <div>
-        <div class="bubble bubble-sent">
-          Slm, esq mazalhom disponible?
-        </div>
-        <span class="bubble-time" style="text-align: right;">10:35 pm</span>
-      </div>
-      <div class="bubble-avatar">A</div>
-    </div>
-
-    <!-- Seller Response (Left side) -->
-    <div class="convo-row row-left">
-      <img id="convo-seller-avatar" src="electrologo.jpg" alt="Shop logo" class="bubble-avatar-img">
-      <div>
-        <div class="bubble bubble-received">
-          Oui kho, l produit disponible
-        </div>
-        <span class="bubble-time">10:55 pm</span>
-      </div>
-    </div>
-
+    <!-- Messages & auto-sent product card load here dynamically -->
   </main>
 
   <!-- Message Input Bar -->
@@ -56,50 +34,7 @@
     </button>
   </footer>
 
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      // 1. Get user/seller from URL parameters
-      const urlParams = new URLSearchParams(window.location.search);
-      const userParam = urlParams.get("user") || urlParams.get("seller") || urlParams.get("shop");
-      const rawUserName = userParam ? decodeURIComponent(userParam) : "electro dz";
-      const userKey = rawUserName.toLowerCase().trim().replace(/^@/, '');
-
-      // 2. Map store/user details
-      const stores = {
-        "electro dz": { name: "Electro dz", logo: "electrologo.jpg" },
-        "thewoman_dz": { name: "thewoman_dz", logo: "clotheslogo.jpg" },
-        "the_shoe_dz": { name: "the_shoe_dz", logo: "shoeslogo.jpg" },
-        "makeup_dz": { name: "makeup_dz", logo: "makeuplogo.jpg" },
-        "yassine_dz": { name: "Yassine Amrani", logo: "default-avatar.png" }
-      };
-
-      const currentUser = stores[userKey] || {
-        name: rawUserName,
-        logo: "default-avatar.png"
-      };
-
-      // 3. Update DOM Elements
-      const pageTitle = document.getElementById("convo-page-title");
-      const headerName = document.getElementById("convo-header-name");
-      const headerAvatar = document.getElementById("convo-header-avatar");
-      const sellerAvatar = document.getElementById("convo-seller-avatar");
-      const profileLink = document.getElementById("convo-profile-link");
-
-      if (pageTitle) pageTitle.textContent = `RYFT — ${currentUser.name}`;
-      if (headerName) headerName.textContent = currentUser.name;
-      if (headerAvatar) {
-        headerAvatar.src = currentUser.logo;
-        headerAvatar.alt = currentUser.name;
-      }
-      if (sellerAvatar) {
-        sellerAvatar.src = currentUser.logo;
-        sellerAvatar.alt = currentUser.name;
-      }
-      if (profileLink) {
-        profileLink.href = `seller-view-buyer-profile.html?user=${encodeURIComponent(userKey)}`;
-      }
-    });
-  </script>
-
+  <!-- Required External JS Link -->
+  <script src="conversation.js"></script>
 </body>
 </html>

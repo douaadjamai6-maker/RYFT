@@ -1,3 +1,4 @@
+
 function renderCategoryPage(categoryName) {
   document.addEventListener("DOMContentLoaded", () => {
     const defaultProducts = [
@@ -74,3 +75,4 @@ function renderCategoryPage(categoryName) {
     render(categoryProducts);
   });
 }
+

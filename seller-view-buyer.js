@@ -1,3 +1,4 @@
+
 document.addEventListener("DOMContentLoaded", () => {
   // 1. Mock Buyer Database
   const buyerDatabase = {

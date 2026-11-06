@@ -1,3 +1,4 @@
+
 document.addEventListener("DOMContentLoaded", () => {
   // 1. Get the container where saved cards should appear
   const gridContainer = document.querySelector("#liked-products-grid");

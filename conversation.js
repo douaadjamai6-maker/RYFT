@@ -1,25 +1,21 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // 1. Identify URL params & active role context
   const urlParams = new URLSearchParams(window.location.search);
   const sellerParam = urlParams.get("seller") || urlParams.get("shop");
-  const rawSellerName = sellerParam ? decodeURIComponent(sellerParam) : "electro dz";
+  const rawSellerName = sellerParam ? decodeURIComponent(sellerParam) : "Electro dz";
   const activeSellerKey = rawSellerName.toLowerCase().trim();
 
-  // Role simulation check: Reads active account mode (defaults to 'buyer' unless set to 'seller')
   const currentRole = localStorage.getItem("ryft_user_role") || "buyer"; 
-
   const STORAGE_KEY = `ryft_chat_${activeSellerKey}`;
   const convoThread = document.querySelector(".convo-thread");
   const messageInput = document.querySelector(".convo-input-bar input");
   const sendBtn = document.querySelector(".send-btn");
   const micBtn = document.querySelector(".mic-btn");
 
-  // Audio Recording Variables
   let mediaRecorder = null;
   let audioChunks = [];
   let isRecording = false;
 
-  // 2. Mark conversation as read
+  // Mark conversation as read
   if (sellerParam) {
     const READ_KEY = "ryft_read_messages";
     const readList = JSON.parse(localStorage.getItem(READ_KEY) || "[]");
@@ -29,7 +25,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Helper: Format Current Time (e.g., 10:35 pm)
   function getFormattedTime() {
     const now = new Date();
     let hours = now.getHours();
@@ -39,11 +34,9 @@ document.addEventListener("DOMContentLoaded", () => {
     return `${hours}:${minutes} ${ampm}`;
   }
 
-  // Helper: Load Messages from localStorage
   function loadMessages() {
+    if (!convoThread) return;
     const messages = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-    
-    // Clear dynamic messages (preserve auto-sent product card if present)
     const dynamicRows = convoThread.querySelectorAll(".convo-row:not(.static-card)");
     dynamicRows.forEach(row => row.remove());
 
@@ -51,15 +44,14 @@ document.addEventListener("DOMContentLoaded", () => {
     convoThread.scrollTop = convoThread.scrollHeight;
   }
 
-  // Helper: Save new message to localStorage
   function saveMessage(msgObj) {
     const messages = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
     messages.push(msgObj);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
   }
 
-  // Helper: Append Message DOM element based on current role perspective
   function appendMessageToDOM(msg) {
+    if (!convoThread) return;
     const isSentByMe = msg.senderRole === currentRole;
     const rowClass = isSentByMe ? "row-right" : "row-left";
     const bubbleClass = isSentByMe ? "bubble-sent" : "bubble-received";
@@ -99,30 +91,32 @@ document.addEventListener("DOMContentLoaded", () => {
     convoThread.scrollTop = convoThread.scrollHeight;
   }
 
-  // 3. Send Text Message Event
-  function handleSendMessage() {
-    const text = messageInput.value.trim();
-    if (!text) return;
+  // Send Text Message
+  if (sendBtn && messageInput) {
+    const handleSendMessage = () => {
+      const text = messageInput.value.trim();
+      if (!text) return;
 
-    const newMsg = {
-      senderRole: currentRole, // 'buyer' or 'seller'
-      type: "text",
-      text: text,
-      time: getFormattedTime()
+      const newMsg = {
+        senderRole: currentRole,
+        type: "text",
+        text: text,
+        time: getFormattedTime()
+      };
+
+      saveMessage(newMsg);
+      appendMessageToDOM(newMsg);
+      messageInput.value = "";
     };
 
-    saveMessage(newMsg);
-    appendMessageToDOM(newMsg);
-    messageInput.value = "";
+    sendBtn.addEventListener("click", handleSendMessage);
+    messageInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") handleSendMessage();
+    });
   }
 
-  sendBtn.addEventListener("click", handleSendMessage);
-  messageInput.addEventListener("keypress", (e) => {
-    if (e.key === "Enter") handleSendMessage();
-  });
-
-  // 4. Voice Recording Logic (Mic Button)
-  if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+  // Voice Recording Logic
+  if (micBtn && navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
     micBtn.addEventListener("click", async () => {
       if (!isRecording) {
         try {
@@ -136,7 +130,6 @@ document.addEventListener("DOMContentLoaded", () => {
             const audioBlob = new Blob(audioChunks, { type: "audio/webm" });
             const reader = new FileReader();
             
-            // Convert audio blob to Base64 data URL for localStorage persistence
             reader.readAsDataURL(audioBlob);
             reader.onloadend = () => {
               const base64Audio = reader.result;
@@ -153,12 +146,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
           mediaRecorder.start();
           isRecording = true;
-          micBtn.style.color = "#ef4444"; // Highlight mic icon in red while recording
+          micBtn.style.color = "#ef4444";
         } catch (err) {
-          console.error("Microphone access denied or error:", err);
+          console.error("Microphone access error:", err);
         }
       } else {
-        // Stop recording
         mediaRecorder.stop();
         mediaRecorder.stream.getTracks().forEach(track => track.stop());
         isRecording = false;
@@ -167,31 +159,70 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // 5. Inject Auto-Sent Product Card (If present in URL)
+  // Header & Product Card Injection
   const title = urlParams.get("title");
   const price = urlParams.get("price");
   const image = urlParams.get("image");
-  const shop = urlParams.get("shop");
+  const shop = urlParams.get("shop") || rawSellerName;
 
-  if (title && price && image && shop && convoThread) {
+  const pageTitle = document.getElementById("convo-page-title");
+  const headerName = document.getElementById("convo-header-name");
+  const headerAvatar = document.getElementById("convo-header-avatar");
+  const sellerAvatar = document.getElementById("convo-seller-avatar");
+  const profileLink = document.getElementById("convo-profile-link");
+
+  const stores = {
+    "electro dz": { name: "Electro dz", logo: "electrologo.jpg" },
+    "thewoman_dz": { name: "thewoman_dz", logo: "clotheslogo.jpg" },
+    "the_shoe_dz": { name: "the_shoe_dz", logo: "shoeslogo.jpg" },
+    "makeup_dz": { name: "makeup_dz", logo: "makeuplogo.jpg" },
+    "yassine_dz": { name: "Yassine Amrani", logo: "default-avatar.png" }
+  };
+
+  const currentUser = stores[activeSellerKey] || {
+    name: shop,
+    logo: "electrologo.jpg"
+  };
+
+  if (pageTitle) pageTitle.textContent = `RYFT — ${currentUser.name}`;
+  if (headerName) headerName.textContent = currentUser.name;
+  if (headerAvatar) {
+    headerAvatar.src = currentUser.logo;
+    headerAvatar.alt = currentUser.name;
+  }
+  if (sellerAvatar) {
+    sellerAvatar.src = currentUser.logo;
+    sellerAvatar.alt = currentUser.name;
+  }
+  if (profileLink) {
+    profileLink.href = `seller-view-buyer-profile.html?user=${encodeURIComponent(activeSellerKey)}`;
+  }
+
+  // Inject Product Card matching your target design
+  if (title && price && convoThread) {
+    const decodedTitle = decodeURIComponent(title);
+    const decodedPrice = decodeURIComponent(price);
+    const decodedImage = image ? decodeURIComponent(image) : "headphones.jpg";
+    const decodedShop = shop ? decodeURIComponent(shop) : currentUser.name;
+
     const cardHTML = `
-      <div class="convo-row row-right static-card">
-        <div class="auto-sent-card">
-          <div class="auto-sent-content">
-            <img src="${image}" alt="${title}" class="auto-sent-img">
-            <div class="auto-sent-details">
-              <p class="auto-sent-title">${title}</p>
-              <p class="auto-sent-price">${price}</p>
-              <p class="auto-sent-shop">${shop}</p>
+      <div class="convo-row row-right static-card" style="margin-bottom: 20px;">
+        <div>
+          <div style="border: 2px solid #00bcd4; border-radius: 16px; padding: 10px; background: #fff; max-width: 290px; display: flex; gap: 12px; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.04);">
+            <img src="${decodedImage}" alt="${decodedTitle}" style="width: 65px; height: 65px; object-fit: cover; border-radius: 10px;">
+            <div>
+              <h4 style="margin: 0; font-size: 0.92rem; font-weight: 600; color: #111;">${decodedTitle}</h4>
+              <p style="margin: 3px 0; font-size: 0.88rem; font-weight: 700; color: #ff5722;">${decodedPrice}</p>
+              <span style="font-size: 0.75rem; color: #888;">${decodedShop}</span>
             </div>
           </div>
-          <p class="auto-sent-subtext">auto sent when message icon tapped</p>
+          <span class="bubble-time" style="text-align: right; display: block; font-size: 0.72rem; color: #aaa; margin-top: 4px;">auto sent when message icon tapped</span>
         </div>
+        <div class="bubble-avatar">A</div>
       </div>
     `;
     convoThread.insertAdjacentHTML("afterbegin", cardHTML);
   }
 
-  // Initialize and render all persistent thread messages
   loadMessages();
 });

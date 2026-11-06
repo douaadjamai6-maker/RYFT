@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // 1. Read URL Query Parameters
+  // 1. Read URL Query Parameters (if coming from product list)
   const urlParams = new URLSearchParams(window.location.search);
   const paramTitle = urlParams.get("title");
   const paramPrice = urlParams.get("price");
@@ -19,33 +19,24 @@ document.addEventListener("DOMContentLoaded", () => {
   const messageBtn = document.getElementById("btn-message-seller");
   const favBtn = document.getElementById("fav-btn");
 
-  // 3. Extract Current Product Context (Uses dynamic paramShop first)
+  // 3. Extract Current Product Context
   const currentProduct = {
-    title: paramTitle ? decodeURIComponent(paramTitle) : (titleEl ? titleEl.textContent : "Product Detail"),
-    price: paramPrice ? decodeURIComponent(paramPrice) : (priceEl ? priceEl.textContent : "0 DA"),
+    title: paramTitle ? decodeURIComponent(paramTitle) : (titleEl ? titleEl.textContent : "Wireless Headphones"),
+    price: paramPrice ? decodeURIComponent(paramPrice) : (priceEl ? priceEl.textContent : "3,500 DA"),
     image: paramImage ? decodeURIComponent(paramImage) : (imageEl ? imageEl.getAttribute("src") : "headphones.jpg"),
     shop: paramShop ? decodeURIComponent(paramShop) : (sellerNameEl ? sellerNameEl.textContent : "Electro dz")
   };
 
   // Update UI components dynamically
-  if (paramTitle) {
-    if (titleEl) titleEl.textContent = currentProduct.title;
-    if (pageTitleEl) pageTitleEl.textContent = `Ryft — ${currentProduct.title}`;
+  if (titleEl) titleEl.textContent = currentProduct.title;
+  if (pageTitleEl) pageTitleEl.textContent = `Ryft — ${currentProduct.title}`;
+  if (priceEl) priceEl.textContent = currentProduct.price;
+  
+  if (imageEl) {
+    imageEl.src = currentProduct.image;
+    imageEl.alt = currentProduct.title;
   }
-
-  if (paramPrice && priceEl) {
-    priceEl.textContent = currentProduct.price;
-  }
-
-  if (paramImage) {
-    if (imageEl) {
-      imageEl.src = currentProduct.image;
-      imageEl.alt = currentProduct.title;
-    }
-    if (thumbMainEl) {
-      thumbMainEl.src = currentProduct.image;
-    }
-  }
+  if (thumbMainEl) thumbMainEl.src = currentProduct.image;
 
   // Update Shop Display & Logos dynamically
   if (sellerNameEl) sellerNameEl.textContent = currentProduct.shop;
@@ -66,24 +57,32 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Set link to direct specifically to the current item's shop-profile.html
   if (sellerProfileLink) {
     sellerProfileLink.href = `shop-profile.html?shop=${encodeURIComponent(currentProduct.shop)}`;
   }
 
+  // BULLETPROOF MESSAGE BUTTON CLICK HANDLER
   if (messageBtn) {
-    messageBtn.href = `conversation.html?title=${encodeURIComponent(currentProduct.title)}&price=${encodeURIComponent(currentProduct.price)}&image=${encodeURIComponent(currentProduct.image)}&shop=${encodeURIComponent(currentProduct.shop)}`;
+    messageBtn.addEventListener("click", (e) => {
+      e.preventDefault(); // Stop default link behavior
+      
+      // Grab active text directly from screen elements at the moment of clicking
+      const activeTitle = document.getElementById("detail-title")?.textContent || currentProduct.title;
+      const activePrice = document.getElementById("detail-price")?.textContent || currentProduct.price;
+      const activeImage = document.getElementById("detail-image")?.getAttribute("src") || currentProduct.image;
+      const activeShop = document.getElementById("detail-seller-name")?.textContent || currentProduct.shop;
+
+      // Build precise URL
+      const targetUrl = `conversation.html?title=${encodeURIComponent(activeTitle)}&price=${encodeURIComponent(activePrice)}&image=${encodeURIComponent(activeImage)}&shop=${encodeURIComponent(activeShop)}`;
+      
+      window.location.href = targetUrl;
+    });
   }
 
   // ==========================================
   // HEART / FAVORITING LOGIC
   // ==========================================
   if (favBtn) {
-    favBtn.dataset.title = currentProduct.title;
-    favBtn.dataset.price = currentProduct.price;
-    favBtn.dataset.image = currentProduct.image;
-    favBtn.dataset.shop = currentProduct.shop;
-
     let savedProducts = JSON.parse(localStorage.getItem("savedProducts")) || [];
     const isAlreadySaved = savedProducts.some(item => item.title === currentProduct.title);
     const icon = favBtn.querySelector("i");
